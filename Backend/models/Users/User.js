@@ -49,7 +49,6 @@ const userSchema = new mongoose.Schema(
     notificationType: {
       email: {
         type: String,
-        required: true,
       },
     },
     gender: {
