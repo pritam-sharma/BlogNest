@@ -8,9 +8,10 @@ const app = express();
 
 //! load the environment variable
 dotenv.config();
+const DBURL = process.env.DATABASE_URL;
 
 //! Establish connection to MongoDB
-connectDB();
+connectDB(DBURL);
 
 //! Set up the middleware
 app.use(express.json());
