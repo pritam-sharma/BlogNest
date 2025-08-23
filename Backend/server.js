@@ -7,6 +7,7 @@ const {
   globalErrorHandler,
 } = require("./middlewares/globalErrorHandler");
 const categoriesRouter = require("./routes/categories/categoriesRouter");
+const postRouter = require("./routes/Posts/postRouter");
 
 //! Create an express app
 const app = express();
@@ -26,6 +27,9 @@ app.use("/api/v1/users", usersRouter);
 
 //? Setup the Category Router
 app.use("/api/v1/categories", categoriesRouter);
+
+//? Setup the Post Router
+app.use("/api/v1/posts", postRouter);
 
 //? Not found route handler
 app.use(notFound);
