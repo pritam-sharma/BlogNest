@@ -20,15 +20,15 @@ exports.createCategory = asyncHandler(async (req, res, next) => {
   });
 });
 
-//@desc Get all categories
+//@desc Fetch all categories
 //@route GET /api/v1/categories
 //@access public
 exports.getAllCategories = asyncHandler(async (req, res, next) => {
-  const AllCategories = await Category.find({});
+  const allCategories = await Category.find({});
   res.status(201).json({
     status: "success",
     message: "All Categories fetched successfully",
-    AllCategories,
+    allCategories,
   });
 });
 

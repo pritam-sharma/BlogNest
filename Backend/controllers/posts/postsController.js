@@ -50,3 +50,39 @@ exports.createPost = asyncHandler(async (req, res, next) => {
   });
 });
 
+//@desc Fech all posts
+//@route GET /api/v1/posts
+//@access public
+exports.getAllPosts = asyncHandler(async (req, res, next) => {
+  const allPsts = await Post.find({});
+  res.status(201).json({
+    status: "success",
+    message: "All Posts fetched successfully",
+    allPsts,
+  });
+});
+
+//@desc Fetch a single post
+//@route GET /api/v1/posts/:id
+//@access Public
+exports.getSinglePost = asyncHandler(async (req, res, next) => {
+  const postId = req.params.id;
+
+  // Find post by ID
+  const post = await Post.findById(postId);
+
+  // If post not found
+  if (!post) {
+    return res.status(404).json({
+      status: "fail",
+      message: "Post not found",
+    });
+  }
+
+  // Send success response
+  res.status(200).json({
+    status: "success",
+    message: "Post fetched successfully",
+    post,
+  });
+});
