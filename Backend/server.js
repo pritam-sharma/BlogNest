@@ -8,6 +8,7 @@ const {
 } = require("./middlewares/globalErrorHandler");
 const categoriesRouter = require("./routes/categories/categoriesRouter");
 const postRouter = require("./routes/Posts/postRouter");
+const commentRouter = require("./routes/Comments/commentRouter");
 
 //! Create an express app
 const app = express();
@@ -30,6 +31,9 @@ app.use("/api/v1/categories", categoriesRouter);
 
 //? Setup the Post Router
 app.use("/api/v1/posts", postRouter);
+
+//? Setup the Comment Router
+app.use("/api/v1/comments", commentRouter);
 
 //? Not found route handler
 app.use(notFound);
