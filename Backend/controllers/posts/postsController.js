@@ -53,7 +53,7 @@ exports.createPost = asyncHandler(async (req, res, next) => {
 //@desc Fech all posts
 //@route GET /api/v1/posts
 //@access public
-exports.getAllPosts = asyncHandler(async (req, res, next) => {
+exports.getAllPosts = asyncHandler(async (req, res) => {
   const allPsts = await Post.find({});
   res.status(201).json({
     status: "success",
@@ -65,24 +65,53 @@ exports.getAllPosts = asyncHandler(async (req, res, next) => {
 //@desc Fetch a single post
 //@route GET /api/v1/posts/:id
 //@access Public
-exports.getSinglePost = asyncHandler(async (req, res, next) => {
+exports.getSinglePost = asyncHandler(async (req, res) => {
   const postId = req.params.id;
 
   // Find post by ID
   const post = await Post.findById(postId);
 
   // If post not found
-  if (!post) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Post not found",
+  if (post) {
+    res.json({
+      status: "success",
+      message: "Post fetched successfully",
+      post,
+    });
+  } else {
+    res.json({
+      status: "success",
+      message: "No post available",
+      post,
     });
   }
+});
 
-  // Send success response
-  res.status(200).json({
+//@desc Update a post
+//@route PUT /api/v1/posts/:id
+//@access private
+exports.updatePost = asyncHandler(async (req, res) => {
+  const postId = req.params.id;
+  const post = req.body;
+  const updatedPost = await Post.findByIdAndUpdate(postId, post, {
+    new: true,
+    runValidators: true,
+  });
+  res.json({
     status: "success",
-    message: "Post fetched successfully",
-    post,
+    message: "Post updated successfully",
+    updatedPost,
+  });
+});
+
+//@desc Delete a post
+//@route DELETE /api/v1/posts/:id
+//@access private
+exports.deletePost = asyncHandler(async (req, res) => {
+  const postId = req.params.id;
+  await Post.findByIdAndDelete(postId);
+  res.json({
+    status: "success",
+    message: "Post deleted successfully",
   });
 });
