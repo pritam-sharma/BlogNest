@@ -62,7 +62,7 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
 });
 
 //@desc Block user
-//@route POST /api/v1/users/block/:userIdToBlock
+//@route PUT /api/v1/users/block/:userIdToBlock
 //@access private
 exports.blockUser = asyncHandler(async (req, res, next) => {
   const userIdToBlock = req.params.userIdToBlock;
@@ -97,5 +97,51 @@ exports.blockUser = asyncHandler(async (req, res, next) => {
   res.json({
     status: "success",
     message: "User blocked successfully",
+  });
+});
+
+//@desc Unblock user
+//@route POST /api/v1/users/unblock/:userIdToBlock
+//@access private
+exports.unblockUser = asyncHandler(async (req, res, next) => {
+  const userIdToUnblock = req.params.userIdToUnblock;
+
+  // ✅ Check if the user to unblock exists
+  const userToUnblock = await User.findById(userIdToUnblock);
+  if (!userToUnblock) {
+    let error = new Error("User to unblock is not found!");
+    next(error);
+    return;
+  }
+
+  const userUnblocking = req?.userAuth._id;
+
+  // ✅ Prevent self-unblocking error handling.
+  if (userUnblocking.toString() === userIdToUnblock.toString()) {
+    let error = new Error("You can't unblock yourself!");
+    next(error);
+    return;
+  }
+
+  // ✅ Get the current user
+  let currentUser = await User.findById(userUnblocking);
+
+  // ✅ Check if the user is even blocked
+  if (!currentUser.blockedUsers.includes(userIdToUnblock)) {
+    const error = new Error("This user is not in your blocked list!");
+    next(error);
+    return;
+  }
+
+  // ✅ Remove the user from the blockedUsers array
+  currentUser.blockedUsers = currentUser.blockedUsers.filter(
+    (id) => id.toString() !== userIdToUnblock.toString()
+  );
+
+  await currentUser.save();
+
+  res.json({
+    status: "success",
+    message: "User unblocked successfully",
   });
 });
