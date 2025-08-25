@@ -145,3 +145,118 @@ exports.unblockUser = asyncHandler(async (req, res, next) => {
     message: "User unblocked successfully",
   });
 });
+
+//@desc View another user profile
+//@route GET /api/v1/users/view-other-profile/:userProfileId
+//@access private
+exports.viewOtherProfile = asyncHandler(async (req, res, next) => {
+  const userProfileId = req.params.userProfileId;
+  const userProfile = await User.findById(userProfileId);
+  if (!userProfile) {
+    let error = new Error("User whose profile is to be viewed not present!");
+    next(error);
+    return;
+  }
+  const currentUserId = req?.userAuth._id;
+  //check if we have already viewd the profile of userProfile
+  if (userProfile.profileViewers.includes(currentUserId)) {
+    let error = new Error("You have already viewed the profile");
+    next(error);
+    return;
+  }
+  //puth the currentUserId into array of userProfile
+  userProfile.profileViewers.push(currentUserId);
+  //update the DB
+  await userProfile.save();
+  res.json({
+    status: "success",
+    message: "Profile viewed successfully",
+  });
+});
+
+//@desc Follow User
+//@route PUT /api/v1/users/following/:userIdToFollow
+//@access private
+exports.followingUser = asyncHandler(async (req, res, next) => {
+  //find the current user id
+  const currentUserId = req?.userAuth?._id;
+  //find the user to be followed
+  const userIdToFollow = req.params.userIdToFollow;
+  const userProfile = await User.findById(userIdToFollow);
+  if (!userProfile) {
+    let error = new Error("User to be follwed not present");
+    next(error);
+    return;
+  }
+  //Avoid current user following himself
+  if (currentUserId.toString() === userIdToFollow.toString()) {
+    let error = new Error("You cannot follow yourself!");
+    next(error);
+    return;
+  }
+  //Push the id of userToFollow inside following array of current user
+  await User.findByIdAndUpdate(
+    currentUserId,
+    {
+      $addToSet: { following: userIdToFollow },
+    },
+    { new: true }
+  );
+  //Push the current user id into the followers array of userToFollow
+  await User.findByIdAndUpdate(
+    userIdToFollow,
+    {
+      $addToSet: { followers: currentUserId },
+    },
+    { new: true }
+  );
+  //send the response
+  res.json({
+    status: "success",
+    message: "You have followed the user",
+  });
+});
+
+//@desc unFollow User
+//@route PUT /api/v1/users/unfollowing/:userIdToUnFollow
+//@access private
+exports.unfollowUser = asyncHandler(async (req, res, next) => {
+  const currentUserId = req?.userAuth?._id;
+  const userIdToUnfollow = req.params.userIdToUnfollow;
+
+  const userProfile = await User.findById(userIdToUnfollow);
+  if (!userProfile) {
+    return next(new Error("User to unfollow not found!"));
+  }
+
+  if (currentUserId.toString() === userIdToUnfollow.toString()) {
+    return next(new Error("You cannot unfollow yourself!"));
+  }
+
+  const currentUser = await User.findById(currentUserId);
+
+  if (!currentUser.following.includes(userIdToUnfollow)) {
+    return res.status(400).json({
+      status: "failed",
+      message: "You are not following this user",
+    });
+  }
+
+  // ✅ Remove the IDs from both users
+  await User.findByIdAndUpdate(
+    currentUserId,
+    { $pull: { following: userIdToUnfollow } },
+    { new: true }
+  );
+
+  await User.findByIdAndUpdate(
+    userIdToUnfollow,
+    { $pull: { followers: currentUserId } },
+    { new: true }
+  );
+
+  res.status(200).json({
+    status: "success",
+    message: "You have unfollowed this user",
+  });
+});
