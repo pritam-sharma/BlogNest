@@ -9,6 +9,7 @@ const {
 const categoriesRouter = require("./routes/categories/categoriesRouter");
 const postRouter = require("./routes/Posts/postRouter");
 const commentRouter = require("./routes/Comments/commentRouter");
+const sendEmail = require("./utils/sendEmails");
 
 //! Create an express app
 const app = express();

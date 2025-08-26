@@ -2,6 +2,7 @@ const User = require("../../models/Users/User");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../../utils/generateToken");
+const sendEmail = require("../../utils/sendEmails");
 //@desc Register new user
 //@route POST /api/v1/users/register
 //@access public
@@ -258,5 +259,31 @@ exports.unfollowUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "You have unfollowed this user",
+  });
+});
+
+//@desc Forgot passwort
+//@route POST /api/v1/users/forgot-password
+//@access public
+
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  //!fetch the email
+  const { email } = req.body;
+
+  //!find email in the db
+  const userFound = await User.findOne({ email });
+  if (!userFound) {
+    let error = new Error("This email id is not registered with us");
+    next(error);
+    return;
+  }
+  //!Get the reset token
+  const resetToken = await userFound.generateResetToken();
+  await userFound.save();
+  sendEmail(email, resetToken);
+  //send the response
+  res.json({
+    status: "success",
+    message: "Password reset token sent to your email successfully",
   });
 });
