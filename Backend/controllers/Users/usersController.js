@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../../utils/generateToken");
 const sendEmail = require("../../utils/sendEmails");
+const crypto = require("crypto");
 //@desc Register new user
 //@route POST /api/v1/users/register
 //@access public
@@ -265,7 +266,6 @@ exports.unfollowUser = asyncHandler(async (req, res, next) => {
 //@desc Forgot passwort
 //@route POST /api/v1/users/forgot-password
 //@access public
-
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   //!fetch the email
   const { email } = req.body;
@@ -285,5 +285,42 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   res.json({
     status: "success",
     message: "Password reset token sent to your email successfully",
+  });
+});
+//@desc Reset Passwort
+//@route POST /api/v1/users/reset-password/:resetToken
+//@access public
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  //Get the token from params
+  const { resetToken } = req.params;
+  const { password } = req.body;
+
+  //Convert resetToken into hashed token
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  //verify the token with DB
+  const userFound = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  //If user is not found
+  if (!userFound) {
+    let error = new Error("Password reset token is invalid or expired");
+    next(error);
+    return;
+  }
+  //update the new password
+  const salt = await bcrypt.genSalt(10);
+  userFound.password = await bcrypt.hash(password, salt);
+  userFound.passwordResetToken = undefined;
+  userFound.passwordResetExpires = undefined;
+
+  //Resave the user
+  await userFound.save();
+  res.json({
+    status: "success",
+    message: "Password has been changed successfully",
   });
 });

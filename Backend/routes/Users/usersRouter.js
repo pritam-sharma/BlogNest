@@ -9,6 +9,7 @@ const {
   followingUser,
   unfollowUser,
   forgotPassword,
+  resetPassword,
 } = require("../../controllers/Users/usersController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
 
@@ -35,6 +36,9 @@ usersRouter.put("/unfollowing/:userIdToUnfollow", isLoggedIn, unfollowUser);
 
 //!Forgot password Route
 usersRouter.post("/forgot-password", forgotPassword);
+
+//!Reset password Route
+usersRouter.post("/reset-password/:resetToken", resetPassword);
 
 //!View another profile Route
 usersRouter.get(
