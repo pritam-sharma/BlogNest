@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const generateToken = require("../../utils/generateToken");
 const sendEmail = require("../../utils/sendEmails");
 const crypto = require("crypto");
+const sendVerificationEmail = require("../../utils/sendVarificationEmail");
 //@desc Register new user
 //@route POST /api/v1/users/register
 //@access public
@@ -322,5 +323,30 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   res.json({
     status: "success",
     message: "Password has been changed successfully",
+  });
+});
+//@desc send account verification mail
+//@route POST /api/v1/users/account-verification-email
+//@access private
+exports.accountVerificationEmail = asyncHandler(async (req, res, next) => {
+  //find the current user's email
+  const currentUser = await User.findById(req?.userAuth?._id);
+  if (!currentUser) {
+    let error = new Error("User not found");
+    next(error);
+    return;
+  }
+  //Get the token from current user object
+  const verifyToken = await currentUser.generateAccountVerificationToken();
+
+  //resavel the user
+  await currentUser.save();
+
+  //send the verification email
+  sendVerificationEmail(currentUser.email, verifyToken);
+
+  res.json({
+    status: "success",
+    message: `Account verication email has been sent to your registered email id ${currentUser.email}`,
   });
 });
