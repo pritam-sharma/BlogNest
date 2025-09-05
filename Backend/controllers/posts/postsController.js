@@ -115,3 +115,39 @@ exports.deletePost = asyncHandler(async (req, res) => {
     message: "Post deleted successfully",
   });
 });
+//@desc Like a Post
+//@route PUT /api/v1/posts/like/:postId
+//@access private
+exports.likePost = asyncHandler(async (req, res, next) => {
+  //Get the id of the post
+  const postId = req.params.postId;
+  //Get the id of the logged in user
+  const loggedInUserId = req?.userAuth?._id;
+
+  //Find the post to be liked
+  const post = await Post.findById(postId);
+  if (!post) {
+    let error = new Error("Post not found");
+    error.status = 404;
+    next(error);
+    return;
+  }
+  //add the user to the likes array of the post
+  await Post.findByIdAndUpdate(
+    postId,
+    { $addToSet: { likes: loggedInUserId } },
+    { new: true }
+  );
+
+  //remove the post from the dislikes array of the user
+  post.dislikes = post.dislikes.filter(
+    (userId) => userId.toString() !== loggedInUserId.toString()
+  );
+  //resave the post
+  await post.save();
+  res.json({
+    status: "success",
+    message: "Post liked successfully",
+    updatedPost: post,
+  });
+});
