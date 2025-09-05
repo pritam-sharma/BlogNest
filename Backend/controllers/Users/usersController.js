@@ -350,3 +350,38 @@ exports.accountVerificationEmail = asyncHandler(async (req, res, next) => {
     message: `Account verication email has been sent to your registered email id ${currentUser.email}`,
   });
 });
+
+//@desc account token verification
+//@route POST /api/v1/users/verify-account/:verifyToken
+//@access private
+exports.verifyAccount = asyncHandler(async (req, res, next) => {
+  //Get the token from params
+  const { verifyToken } = req.params;
+  //Convert verifyToken into hashed token
+  let hashedToken = crypto
+    .createHash("sha256")
+    .update(verifyToken)
+    .digest("hex");
+
+  //verify the token with DB
+  const userFound = await User.findOne({
+    accountVerificationToken: hashedToken,
+    accountVerificationExpires: { $gt: Date.now() },
+  });
+  //If user is not found
+  if (!userFound) {
+    let error = new Error("Account verification token is invalid or expired");
+    next(error);
+    return;
+  }
+  //Update the isVerified field to true
+  userFound.isVerified = true;
+  userFound.accountVerificationToken = undefined;
+  userFound.accountVerificationExpires = undefined;
+  //Resave the user
+  await userFound.save();
+  res.json({
+    status: "success",
+    message: "your account has been verified successfully",
+  });
+});

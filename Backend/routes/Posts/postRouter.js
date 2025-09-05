@@ -7,10 +7,11 @@ const {
   updatePost,
 } = require("../../controllers/posts/postsController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
+const isAccountVerified = require("../../middlewares/isAccountVerified");
 const postRouter = express.Router();
 
 //?Create Post Route
-postRouter.post("/", isLoggedIn, createPost);
+postRouter.post("/", isLoggedIn, isAccountVerified, createPost);
 
 //?Fetch All Posts Route
 postRouter.get("/", getAllPosts);

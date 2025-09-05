@@ -11,6 +11,7 @@ const {
   forgotPassword,
   resetPassword,
   accountVerificationEmail,
+  verifyAccount,
 } = require("../../controllers/Users/usersController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
 
@@ -42,7 +43,14 @@ usersRouter.put("/forgot-password", forgotPassword);
 usersRouter.put("/reset-password/:resetToken", resetPassword);
 
 //!send account verification email route
-usersRouter.put("/account-verification-email", isLoggedIn, accountVerificationEmail);
+usersRouter.put(
+  "/account-verification-email",
+  isLoggedIn,
+  accountVerificationEmail
+);
+
+//!Account verification email Route
+usersRouter.put("/verify-account/:verifyToken", isLoggedIn, verifyAccount);
 
 //!View another profile Route
 usersRouter.get(
