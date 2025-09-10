@@ -14,13 +14,17 @@ const categorySchema = new mongoose.Schema(
       type: Number,
       defaule: 0,
     },
-    post: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-    }],
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 //! Convert Schema to model

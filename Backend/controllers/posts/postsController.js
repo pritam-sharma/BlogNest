@@ -52,9 +52,30 @@ exports.createPost = asyncHandler(async (req, res, next) => {
 
 //@desc Fech all posts
 //@route GET /api/v1/posts
-//@access public
+//@access private
 exports.getAllPosts = asyncHandler(async (req, res) => {
-  const allPsts = await Post.find({});
+  //Get the current user id
+  const currentUserId = req?.userAuth?._id;
+  const currentTime = new Date();
+  //Get all those users who have blocked the current user
+  const usersBlockingCurrentUser = await User.find({
+    blockedUsers: currentUserId,
+  });
+  //Extract the id of the usrs who have blocked the current user
+  const blokingUsersIds = usersBlockingCurrentUser.map((user) => user._id);
+  const query = {
+    _id: { $nin: blokingUsersIds }, // Exclude blocked users
+    $or: [
+      { scheduledPublished: { $lte: currentTime } }, // If scheduled time is less than or equal to current time
+      { scheduledPublished: null }, // Or if not scheduled at all
+    ],
+  };
+  //Fetch those posts whose authors are not in the blokingUsersIds array
+  const allPsts = await Post.find(query).populate({
+    path: "author",
+    model: "User",
+    select: "username email role",
+  });
   res.status(201).json({
     status: "success",
     message: "All Posts fetched successfully",
@@ -185,5 +206,71 @@ exports.disLikePost = asyncHandler(async (req, res, next) => {
     status: "success",
     message: "Post disLiked successfully",
     updatedPost: post,
+  });
+});
+//@desc clap a Post
+//@route PUT /api/v1/posts/claps/:postId
+//@access private
+exports.clapPost = asyncHandler(async (req, res, next) => {
+  //Get the id of the post
+  const postId = req.params.postId;
+  //Find the post to be liked
+  const post = await Post.findById(postId);
+  if (!post) {
+    let error = new Error("Post not found");
+    error.status = 404;
+    next(error);
+    return;
+  }
+  //implement clap
+  const updatedPost = await Post.findByIdAndUpdate(
+    postId,
+    { $inc: { claps: 1 } },
+    { new: true }
+  );
+  res.json({
+    status: "success",
+    message: "Post clapped successfully",
+    updatedPost,
+  });
+});
+//@desc schedule a Post
+//@route PUT /api/v1/posts/schedule/:postId
+//@access private
+exports.schedulePost = asyncHandler(async (req, res, next) => {
+  //Get the id of the post
+  const { postId } = req.params;
+  const { scheduledPublished } = req.body;
+  //check if postId and scheduledPublish are present
+  if (!postId || !scheduledPublished) {
+    let error = new Error("PostId and scheduledDate are required");
+    next(error);
+    return;
+  }
+  //find the post from DB
+  const post = await Post.findById(postId);
+  if (!post) {
+    let error = new Error("Post not found");
+    next(error);
+    return;
+  }
+  //check if the current user is the author of the post
+  if (post.author.toString() !== req?.userAuth?._id.toString()) {
+    let error = new Error("You are not authorized to schedule this post");
+    next(error);
+    return;
+  }
+  const scheduleDate = new Date(scheduledPublished);
+  if (scheduleDate <= new Date()) {
+    let error = new Error("Scheduled date must be in the future");
+    next(error);
+    return;
+  }
+  post.scheduledPublished = scheduleDate;
+  await post.save();
+  res.json({
+    status: "success",
+    message: "Post scheduled successfully",
+    post,
   });
 });
