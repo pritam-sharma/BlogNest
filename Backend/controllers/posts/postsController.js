@@ -7,7 +7,7 @@ const Category = require("../../models/Categories/Categories");
 //@route POST /api/v1/posts
 //@access private
 exports.createPost = asyncHandler(async (req, res, next) => {
-  //Get the payload
+  // Get the payload
   const { title, content, categoryId } = req.body;
   //Check if the post is present
   const isPostFound = await Post.findOne({ title });
@@ -23,6 +23,7 @@ exports.createPost = asyncHandler(async (req, res, next) => {
     content,
     category: categoryId,
     author: req?.userAuth?._id,
+    image: req?.file?.path,
   });
   //Update user by adding post in it
   const user = await User.findByIdAndUpdate(
@@ -48,6 +49,8 @@ exports.createPost = asyncHandler(async (req, res, next) => {
     user,
     category,
   });
+  console.log("file uploaded", req.file);
+  res.json({ imageUrl: req.file.path });
 });
 
 //@desc Fech all posts
