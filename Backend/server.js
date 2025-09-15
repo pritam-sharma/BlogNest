@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const usersRouter = require("./routes/Users/usersRouter");
 const connectDB = require("./config/database");
@@ -14,6 +15,7 @@ const sendEmail = require("./utils/sendEmails");
 //! Create an express app
 const app = express();
 
+app.use(cors());
 //! load the environment variable
 dotenv.config();
 const DBURL = process.env.DATABASE_URL;
