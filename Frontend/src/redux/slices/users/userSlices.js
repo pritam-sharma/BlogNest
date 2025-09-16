@@ -13,7 +13,10 @@ const INITIAL_STATE = {
   profile: {},
   userAuth: {
     error: null,
-    userInfo: {},
+    userInfo: localStorage.getItem("userInfo")
+      ? JSON.parse(localStorage.getItem("userInfo"))
+      : null,
+    loading: false,
   },
 };
 
@@ -23,11 +26,12 @@ export const loginAction = createAsyncThunk(
   async (payload, { rejectWithValue, getState, dispatch }) => {
     //make request
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:3000/api/v1/users/login",
         payload
       );
-      return response;
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      return data;
     } catch (err) {
       return rejectWithValue(err.response?.data);
     }
@@ -50,7 +54,7 @@ const usersSlice = createSlice({
     });
     builder.addCase(loginAction.rejected, (state, action) => {
       state.loading = false;
-      state.success = true;
+      state.success = false;
       state.error = action.payload;
     });
   },
