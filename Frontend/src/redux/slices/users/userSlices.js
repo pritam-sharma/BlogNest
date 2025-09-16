@@ -19,8 +19,24 @@ const INITIAL_STATE = {
     loading: false,
   },
 };
+//!Register Action
 
-//Login Action
+export const registerAction = createAsyncThunk(
+  "user/register",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    //make request
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/users/register",
+        payload
+      );
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  }
+);
+//!Login Action
 export const loginAction = createAsyncThunk(
   "user/login",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -38,6 +54,12 @@ export const loginAction = createAsyncThunk(
   }
 );
 
+//!Logout Action
+export const logoutAction = createAsyncThunk("user/logout", async () => {
+  localStorage.removeItem("userInfo");
+  return true;
+});
+
 const usersSlice = createSlice({
   name: "users",
   initialState: INITIAL_STATE,
@@ -53,6 +75,22 @@ const usersSlice = createSlice({
       state.userAuth.userInfo = action.payload;
     });
     builder.addCase(loginAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+
+    //Register
+    builder.addCase(registerAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(registerAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+      state.user = action.payload;
+    });
+    builder.addCase(registerAction.rejected, (state, action) => {
       state.loading = false;
       state.success = false;
       state.error = action.payload;
