@@ -11,7 +11,8 @@ const {
   disLikePost,
   clapPost,
   schedulePost,
-} = require("../../controllers/posts/postsController");
+  getPublicPosts,
+} = require("../../controllers/Posts/postsController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
 const isAccountVerified = require("../../middlewares/isAccountVerified");
 const postRouter = express.Router();
@@ -24,6 +25,9 @@ postRouter.post("/", isLoggedIn, upload.single("file"), createPost);
 
 //?Fetch All Posts Route
 postRouter.get("/", isLoggedIn, getAllPosts);
+
+//?Fetch Public Posts Route
+postRouter.get("/public", getPublicPosts);
 
 //?Fetch Single Post Route
 postRouter.get("/:id", getSinglePost);

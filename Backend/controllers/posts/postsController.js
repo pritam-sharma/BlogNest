@@ -128,6 +128,23 @@ exports.updatePost = asyncHandler(async (req, res) => {
   });
 });
 
+//@desc Fetch only four post
+//@route GET /api/v1/posts
+//@access Public
+exports.getPublicPosts = asyncHandler(async (req, res) => {
+  // Find latest 4 posts
+  const post = await Post.find({})
+    .sort({ createdAt: -1 })
+    .limit(4)
+    .populate("category");
+
+  res.status(201).json({
+    status: "success",
+    message: "Public Posts fetched successfully",
+    post,
+  });
+});
+
 //@desc Delete a post
 //@route DELETE /api/v1/posts/:id
 //@access private
