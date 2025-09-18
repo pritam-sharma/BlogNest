@@ -1,16 +1,7 @@
-import ReactLoading from "react-loading";
-const LoadingComponent = () => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <ReactLoading type="spin" color="green" />
-    </div>
-  );
-};
+const LoadingComponent = () => (
+  <div className="flex justify-center items-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+  </div>
+);
 
 export default LoadingComponent;
