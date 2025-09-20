@@ -8,7 +8,10 @@ const AddPost = () => {
   //get categories from store
   const { categories } = useSelector((state) => state?.categories);
 
-  console.log("categories", categories);
+  const options = categories?.allCategories?.map((cat) => ({
+    value: cat._id,
+    label: cat.name,
+  }));
 
   useEffect(() => {
     //dispatch action to fetch categories
@@ -21,10 +24,7 @@ const AddPost = () => {
     category: null,
     content: "",
   });
-  // const options = categories?.map((cat) => ({
-  //   value: cat._id,
-  //   label: cat.name,
-  // }));
+
   //handle select change
   const handleSelectChange = (selectedOption) => {
     setFormData({ ...formData, category: selectedOption.value });
