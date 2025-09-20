@@ -58,5 +58,5 @@ const postsSlice = createSlice({
   },
 });
 //generate the reducer
-const { reducer: postsReducer } = postsSlice;
+const postsReducer = postsSlice.reducer;
 export default postsReducer;

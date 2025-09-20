@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategoriesAction } from "../../redux/slices/categories/categorySlices";
 
 const AddPost = () => {
+  const dispatch = useDispatch();
+  //get categories from store
+  const { categories } = useSelector((state) => state?.categories);
+
+  console.log("categories", categories);
+
+  useEffect(() => {
+    //dispatch action to fetch categories
+    dispatch(fetchCategoriesAction());
+  }, [dispatch]);
+
   const [formData, setFormData] = useState({
     title: "",
     image: null,
     category: null,
     content: "",
   });
-
+  // const options = categories?.map((cat) => ({
+  //   value: cat._id,
+  //   label: cat.name,
+  // }));
+  //handle select change
+  const handleSelectChange = (selectedOption) => {
+    setFormData({ ...formData, category: selectedOption.value });
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -56,6 +77,16 @@ const AddPost = () => {
             {/* error here */}
           </label>
           {/* category here */}
+          <label className="mb-4 flex flex-col w-full">
+            <span className="mb-1 text-coolGray-800 font-medium">Category</span>
+            <Select
+              options={options}
+              onChange={handleSelectChange}
+              placeholder="Select Category"
+              className="w-full"
+            />
+            {/* error here */}
+          </label>
           <label className="mb-4 flex flex-col w-full">
             <span className="mb-1 text-coolGray-800 font-medium">Content</span>
             <textarea

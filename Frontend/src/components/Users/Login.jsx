@@ -38,11 +38,11 @@ const Login = () => {
   const { userAuth, loading, error, success } = useSelector(
     (state) => state.users
   );
-  // useEffect(() => {
-  //   if (userAuth?.userInfo?.token) {
-  //     navigate("/user-profile");
-  //   }
-  // }, [userAuth?.userInfo?.token]);
+  useEffect(() => {
+    if (userAuth?.userInfo?.token) {
+      navigate("/user-profile", { replace: true });
+    }
+  }, [userAuth, navigate]);
 
   return (
     <section className="py-16 xl:pb-56 bg-white overflow-hidden">
