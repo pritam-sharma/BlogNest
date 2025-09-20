@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { resetErrorAction } from "../globalSlice/globalSlice";
+import { resetSuccessAction } from "../globalSlice/globalSlice";
 import axios from "axios";
 const INITIAL_STATE = {
   loading: false,
@@ -25,6 +26,36 @@ export const fetchPublicPostsAction = createAsyncThunk(
     }
   }
 );
+//!Create ppst Action
+export const addPostsAction = createAsyncThunk(
+  "post/create",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    //make request
+    try {
+      //convert payload to form data
+      const formData = new FormData();
+      formData.append("title", payload?.title);
+      formData.append("content", payload?.content);
+      formData.append("categoryId", payload?.category);
+      formData.append("file", payload?.image);
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.post(
+        "http://localhost:3000/api/v1/posts",
+        formData,
+        config
+      );
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  }
+);
 //Posts Slice
 const postsSlice = createSlice({
   name: "posts",
@@ -46,15 +77,29 @@ const postsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // //!resetError Action
-    // builder.addCase(resetErrorAction, (state) => {
-    //   state.error = null;
-    // });
-    // //!resetSuccess Action
-
-    // builder.addCase(resetSuccessAction, (state) => {
-    //   state.success = false;
-    // });
+    // Register actions
+    builder.addCase(addPostsAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addPostsAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+      state.post = action.payload;
+    });
+    builder.addCase(addPostsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //!resetError Action
+    builder.addCase(resetErrorAction, (state) => {
+      state.error = null;
+    });
+    //!resetSuccess Action
+    builder.addCase(resetSuccessAction, (state) => {
+      state.success = false;
+    });
   },
 });
 //generate the reducer
