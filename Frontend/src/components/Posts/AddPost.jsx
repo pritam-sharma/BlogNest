@@ -33,7 +33,7 @@ const AddPost = () => {
   });
 
   const validateForm = (data) => {
-    let error = {};
+    let errors = {};
     if (!data.title) {
       errors.title = "Title is required";
     }
@@ -49,6 +49,12 @@ const AddPost = () => {
     return errors;
   };
 
+  //? handle blur event
+  const handleBlur = (e) => {
+    const formErrors = validateForm(formData);
+    const { name } = e.target;
+    setErrors({ ...errors, [name]: formErrors[name] });
+  };
   //handle select change
   const handleSelectChange = (selectedOption) => {
     setFormData({ ...formData, category: selectedOption.value });
