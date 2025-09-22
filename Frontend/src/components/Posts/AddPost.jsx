@@ -66,16 +66,18 @@ const AddPost = () => {
     setFormData({ ...formData, image: e.target.files[0] });
   };
   const handleSubmit = (e) => {
-    console.log(formData);
-    dispatch(addPostsAction(formData));
     e.preventDefault();
 
-    setFormData({
-      title: "",
-      image: null,
-      category: null,
-      content: "",
-    });
+    const formErrors = validateForm(formData);
+    setErrors(formErrors);
+    if (Object.keys(formErrors).length === 0) {
+      setFormData({
+        title: "",
+        image: null,
+        category: null,
+        content: "",
+      });
+    }
   };
 
   return (
@@ -99,8 +101,9 @@ const AddPost = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
+              onBlur={handleBlur}
             />
-            {/* error here */}
+            {errors?.title && <p className="text-red-500">{errors?.title}</p>}
           </label>
           <label className="mb-4 flex flex-col w-full">
             <span className="mb-1 text-coolGray-800 font-medium">Image</span>
@@ -109,8 +112,9 @@ const AddPost = () => {
               type="file"
               name="image"
               onChange={handleFileChange}
+              onBlur={handleBlur}
             />
-            {/* error here */}
+            {errors?.image && <p className="text-red-500">{errors?.image}</p>}
           </label>
           {/* category here */}
           <label className="mb-4 flex flex-col w-full">
@@ -119,9 +123,11 @@ const AddPost = () => {
               options={options}
               onChange={handleSelectChange}
               placeholder="Select Category"
-              className="w-full"
+              onBlur={handleBlur}
             />
-            {/* error here */}
+            {errors?.category && (
+              <p className="text-red-500">{errors?.category}</p>
+            )}
           </label>
           <label className="mb-4 flex flex-col w-full">
             <span className="mb-1 text-coolGray-800 font-medium">Content</span>
@@ -131,7 +137,11 @@ const AddPost = () => {
               name="content"
               value={formData.content}
               onChange={handleChange}
+              onBlur={handleBlur}
             />
+            {errors?.content && (
+              <p className="text-red-500">{errors?.content}</p>
+            )}
           </label>
           {/* button */}
           {loading ? (
