@@ -8,6 +8,7 @@ import SuccessMsg from "../Alert/SuccessMsg";
 import LoadingComponent from "../Alert/LoadingComponent";
 const AddPost = () => {
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState({});
   const { post, error, loading, success } = useSelector(
     (state) => state?.posts
   );
@@ -30,6 +31,23 @@ const AddPost = () => {
     category: null,
     content: "",
   });
+
+  const validateForm = (data) => {
+    let error = {};
+    if (!data.title) {
+      errors.title = "Title is required";
+    }
+    if (!data.image) {
+      errors.image = "Image is required";
+    }
+    if (!data.content) {
+      errors.content = "Content is required";
+    }
+    if (!data.category) {
+      errors.category = "Category is required";
+    }
+    return errors;
+  };
 
   //handle select change
   const handleSelectChange = (selectedOption) => {
