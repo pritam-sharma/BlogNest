@@ -26,6 +26,22 @@ export const fetchPublicPostsAction = createAsyncThunk(
     }
   }
 );
+//fetch Single posts action
+
+export const getPostAction = createAsyncThunk(
+  "posts/get-post",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //http call
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/v1/posts/${postId}`
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 //!Create ppst Action
 export const addPostsAction = createAsyncThunk(
   "post/create",
@@ -76,7 +92,21 @@ const postsSlice = createSlice({
       state.success = false;
       state.error = action.payload;
     });
-
+    //get single post
+    builder.addCase(getPostAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getPostAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+      state.post = action.payload;
+    });
+    builder.addCase(getPostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
     // Register actions
     builder.addCase(addPostsAction.pending, (state) => {
       state.loading = true;
