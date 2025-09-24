@@ -93,7 +93,9 @@ exports.getSinglePost = asyncHandler(async (req, res) => {
   const postId = req.params.id;
 
   // Find post by ID
-  const post = await Post.findById(postId);
+  const post = await Post.findById(postId)
+    .populate("author")
+    .populate("category");
 
   // If post not found
   if (post) {
