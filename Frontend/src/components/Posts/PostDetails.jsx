@@ -36,7 +36,7 @@ const PostDetails = () => {
               </div>
               <div className="flex items-center justify-center">
                 <p className="inline-block font-medium text-green-500">
-                  John Doe
+                  {post?.post?.auther?.username}
                 </p>
                 <span className="mx-1 text-green-500">•</span>
                 <p className="inline-block font-medium text-green-500">
@@ -44,17 +44,17 @@ const PostDetails = () => {
                 </p>
               </div>
               <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tighter md:text-5xl text-darkCoolGray-900">
-                Lorem ipsum dolor sit amet
+                {post?.post?.title}{" "}
               </h2>
               <p className="mb-10 text-lg font-medium md:text-xl text-coolGray-500">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                {post?.post?.content}
               </p>
               <div className="flex items-center justify-center -mx-2 text-left">
                 <div className="w-auto px-2">
                   <img
                     className="w-12 h-12 rounded-full"
-                    src="https://cdn.pixabay.com/photo/2015/01/08/18/29/entrepreneur-593358_1280.jpg"
-                    alt
+                    src={post?.post?.image}
+                    alt="profile-image"
                   />
                 </div>
                 <div className="w-auto px-2">
@@ -70,8 +70,8 @@ const PostDetails = () => {
           </div>
           <img
             className="w-full mx-auto mb-10"
-            src="https://cdn.pixabay.com/photo/2023/02/21/20/37/dandelion-7805073_960_720.jpg"
-            alt
+            src={post?.post?.image}
+            alt="post"
           />
 
           <div
@@ -87,11 +87,7 @@ const PostDetails = () => {
           <div className="container px-4 mx-auto">
             <div className="mx-auto md:max-w-3xl">
               <p className="pb-10 mb-8 text-lg font-medium border-b md:text-xl text-coolGray-500 border-coolGray-100">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                ullamcorper mattis lorem non. Ultrices praesent amet ipsum justo
-                massa. Eu dolor aliquet risus gravida nunc at feugiat consequat
-                purus. Non massa enim vitae duis mattis. Vel in ultricies vel
-                fringilla.
+                {post?.post?.content}
               </p>
               <div className="flex justify-end mb-4">
                 <button className="p-2 mr-2 text-gray-500 hover:text-gray-700">
