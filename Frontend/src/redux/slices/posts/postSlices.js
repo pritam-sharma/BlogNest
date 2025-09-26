@@ -94,6 +94,30 @@ export const addPostsAction = createAsyncThunk(
     }
   }
 );
+//!Delete post Action
+export const deletePostsAction = createAsyncThunk(
+  "post/delete-post",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //make request
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.delete(
+        `http://localhost:3000/api/v1/posts/${postId}`,
+        formData,
+        config
+      );
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  }
+);
 //Posts Slice
 const postsSlice = createSlice({
   name: "posts",
@@ -124,6 +148,20 @@ const postsSlice = createSlice({
       state.posts = action.payload;
     });
     builder.addCase(fetchPrivatePostsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //delete post
+    builder.addCase(deletePostsAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deletePostsAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+    });
+    builder.addCase(deletePostsAction.rejected, (state, action) => {
       state.loading = false;
       state.success = false;
       state.error = action.payload;

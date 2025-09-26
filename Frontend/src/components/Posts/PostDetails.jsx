@@ -1,13 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getPostAction } from "../../redux/slices/posts/postSlices";
+import {
+  deletePostsAction,
+  getPostAction,
+} from "../../redux/slices/posts/postSlices";
 import moment from "moment";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import LoadingComponent from "../Alert/LoadingComponent";
 import ErrorMsg from "../Alert/ErrorMsg";
 import PostStats from "./PostStats";
 import calculateReadingTime from "../../utils/calculateReadingTime";
 const PostDetails = () => {
+  //!Navigate
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { post, error, success, loading } = useSelector(
     (state) => state?.posts
@@ -24,6 +29,13 @@ const PostDetails = () => {
   const loggedInUser = userAuth?.userInfo?._id.toString();
   //!Check whether the logged in user is the author or not
   const isCreator = creator === loggedInUser;
+
+  const deletePostHandler = () => {
+    dispatch(deletePostsAction(postId));
+    if (success) {
+      navigate("/posts");
+    }
+  };
   return (
     <>
       {loading ? (
@@ -126,7 +138,10 @@ const PostDetails = () => {
                       />
                     </svg>
                   </button>
-                  <button className="p-2 text-gray-500 hover:text-gray-700">
+                  <button
+                    onClick={deletePostHandler}
+                    className="p-2 text-gray-500 hover:text-gray-700"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
