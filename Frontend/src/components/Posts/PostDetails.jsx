@@ -62,15 +62,15 @@ const PostDetails = () => {
                 </p>
                 <span className="mx-1 text-green-500">•</span>
                 <p className="inline-block font-medium text-green-500">
-                  19 Jan 2022
+                  {new Date(post?.post?.createdAt).toDateString()}
                 </p>
               </div>
               <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tighter md:text-5xl text-darkCoolGray-900">
                 {post?.post?.title}{" "}
               </h2>
-              <p className="mb-10 text-lg font-medium md:text-xl text-coolGray-500">
-                {post?.post?.content}
-              </p>
+              {/* <p className="mb-10 text-lg font-medium md:text-xl text-coolGray-500">
+                {/* {post?.post?.content} */}
+              {/* </p> */}
               <div className="flex items-center justify-center -mx-2 text-left">
                 <div className="w-auto px-2">
                   <img
@@ -81,11 +81,11 @@ const PostDetails = () => {
                 </div>
                 <div className="w-auto px-2">
                   <h4 className="text-base font-bold md:text-lg text-coolGray-800">
-                    John Doe
+                    {post?.post?.author?.username}
                   </h4>
-                  <p className="text-base md:text-lg text-coolGray-500">
+                  {/* <p className="text-base md:text-lg text-coolGray-500">
                     12 October 2021
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>

@@ -129,7 +129,7 @@ const postsSlice = createSlice({
     });
     builder.addCase(fetchPublicPostsAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.success = true;
+      // state.success = true;
       state.error = null;
       state.posts = action.payload;
     });
@@ -143,7 +143,7 @@ const postsSlice = createSlice({
     });
     builder.addCase(fetchPrivatePostsAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.success = true;
+      // state.success = true;
       state.error = null;
       state.posts = action.payload;
     });
