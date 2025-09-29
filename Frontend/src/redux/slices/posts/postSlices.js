@@ -172,7 +172,7 @@ const postsSlice = createSlice({
     });
     builder.addCase(getPostAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.success = true;
+      // state.success = true;
       state.error = null;
       state.post = action.payload;
     });

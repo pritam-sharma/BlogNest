@@ -10,6 +10,7 @@ import PublicPosts from "./components/Posts/PublicPosts";
 import AddPost from "./components/Posts/AddPost";
 import PostDetails from "./components/Posts/PostDetails";
 import PostList from "./components/Posts/PostList";
+import UpdatePost from "./components/Posts/UpdatePost";
 const App = () => {
   const { userAuth } = useSelector((state) => state.users);
   console.log("first", userAuth);
@@ -54,6 +55,15 @@ const App = () => {
               <ProtectedRoute>
                 {" "}
                 <PostList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/posts/:postId/update"
+            element={
+              <ProtectedRoute>
+                {" "}
+                <UpdatePost />
               </ProtectedRoute>
             }
           />
