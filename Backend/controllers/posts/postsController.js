@@ -118,11 +118,25 @@ exports.getSinglePost = asyncHandler(async (req, res) => {
 //@access private
 exports.updatePost = asyncHandler(async (req, res) => {
   const postId = req.params.id;
-  const post = req.body;
-  const updatedPost = await Post.findByIdAndUpdate(postId, post, {
-    new: true,
-    runValidators: true,
-  });
+  const postFound = await Post.findById(postId);
+  if (!postFound) {
+    throw Error("Post not found");
+  }
+  const { title, category, content } = req.body;
+
+  const updatedPost = await Post.findByIdAndUpdate(
+    postId,
+    {
+      image: req?.file?.path ? req?.file?.path : postFound.image,
+      title: title ? title : postFound?.title,
+      category: category ? category : postFound?.category,
+      content: content ? content : postFound?.content,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
   res.json({
     status: "success",
     message: "Post updated successfully",
@@ -155,7 +169,7 @@ exports.deletePost = asyncHandler(async (req, res) => {
   const post = await Post.findById(postId);
   const isAuthor = req.userAuth._id.toString() === post?.author?._id.toString();
   if (!isAuthor) {
-    throw Error("Action Denied,you are not the creator of this post")
+    throw Error("Action Denied,you are not the creator of this post");
   }
   await Post.findByIdAndDelete(postId);
   res.json({

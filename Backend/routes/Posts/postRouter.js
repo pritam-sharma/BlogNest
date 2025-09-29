@@ -36,7 +36,7 @@ postRouter.get("/:id", getSinglePost);
 postRouter.delete("/:id", isLoggedIn, deletePost);
 
 //?Update Post Route
-postRouter.put("/:id", isLoggedIn, updatePost);
+postRouter.put("/:id", isLoggedIn, upload.single("file"), updatePost);
 
 //?like a  Post Route
 postRouter.put("/like/:postId", isLoggedIn, likePost);
