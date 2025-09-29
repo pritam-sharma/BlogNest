@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategoriesAction } from "../../redux/slices/categories/categorySlices";
-import { addPostsAction } from "../../redux/slices/posts/postSlices";
+import { updatePostsAction } from "../../redux/slices/posts/postSlices";
 import ErrorMsg from "../Alert/ErrorMsg";
 import SuccessMsg from "../Alert/SuccessMsg";
 import LoadingComponent from "../Alert/LoadingComponent";
+import { useParams } from "react-router-dom";
 const UpdatePost = () => {
+  const { postId } = useParams();
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
   const { post, error, loading, success } = useSelector(
@@ -32,29 +34,6 @@ const UpdatePost = () => {
     content: "",
   });
 
-  const validateForm = (data) => {
-    let errors = {};
-    if (!data.title) {
-      errors.title = "Title is required";
-    }
-    if (!data.image) {
-      errors.image = "Image is required";
-    }
-    if (!data.content) {
-      errors.content = "Content is required";
-    }
-    if (!data.category) {
-      errors.category = "Category is required";
-    }
-    return errors;
-  };
-
-  //? handle blur event
-  const handleBlur = (e) => {
-    const formErrors = validateForm(formData);
-    const { name } = e.target;
-    setErrors({ ...errors, [name]: formErrors[name] });
-  };
   //handle select change
   const handleSelectChange = (selectedOption) => {
     setFormData({ ...formData, category: selectedOption.value });
@@ -67,17 +46,7 @@ const UpdatePost = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const formErrors = validateForm(formData);
-    setErrors(formErrors);
-    if (Object.keys(formErrors).length === 0) {
-      setFormData({
-        title: "",
-        image: null,
-        category: null,
-        content: "",
-      });
-    }
+    dispatch(updatePostsAction({ ...formData, postId }));
   };
 
   return (
@@ -87,8 +56,7 @@ const UpdatePost = () => {
           <h2 className="mb-4 text-2xl md:text-3xl text-coolGray-900 font-bold text-center">
             Add New Post
           </h2>
-          {error && <ErrorMsg message={error?.message} />}
-          {success && <SuccessMsg message="Post Created Successfull" />}
+          {success && <SuccessMsg message="Post Updated Successfull" />}
           <h3 className="mb-7 text-base md:text-lg text-coolGray-500 font-medium text-center">
             Share your thoughts and ideas with the community
           </h3>
@@ -101,9 +69,7 @@ const UpdatePost = () => {
               name="title"
               value={formData.title}
               onChange={handleChange}
-              onBlur={handleBlur}
             />
-            {errors?.title && <p className="text-red-500">{errors?.title}</p>}
           </label>
           <label className="mb-4 flex flex-col w-full">
             <span className="mb-1 text-coolGray-800 font-medium">Image</span>
@@ -112,9 +78,7 @@ const UpdatePost = () => {
               type="file"
               name="image"
               onChange={handleFileChange}
-              onBlur={handleBlur}
             />
-            {errors?.image && <p className="text-red-500">{errors?.image}</p>}
           </label>
           {/* category here */}
           <label className="mb-4 flex flex-col w-full">
@@ -123,11 +87,7 @@ const UpdatePost = () => {
               options={options}
               onChange={handleSelectChange}
               placeholder="Select Category"
-              onBlur={handleBlur}
             />
-            {errors?.category && (
-              <p className="text-red-500">{errors?.category}</p>
-            )}
           </label>
           <label className="mb-4 flex flex-col w-full">
             <span className="mb-1 text-coolGray-800 font-medium">Content</span>
@@ -137,11 +97,7 @@ const UpdatePost = () => {
               name="content"
               value={formData.content}
               onChange={handleChange}
-              onBlur={handleBlur}
             />
-            {errors?.content && (
-              <p className="text-red-500">{errors?.content}</p>
-            )}
           </label>
           {/* button */}
           {loading ? (

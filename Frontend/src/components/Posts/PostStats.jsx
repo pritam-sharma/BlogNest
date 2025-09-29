@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AiOutlineEye } from "react-icons/ai";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import {
+  dislikePostAction,
+  getPostAction,
+  likePostAction,
+} from "../../redux/slices/posts/postSlices";
 
 const PostStats = ({
   views,
@@ -9,9 +15,20 @@ const PostStats = ({
   totalComments,
   readingTime,
   createdAt,
+  postId,
 }) => {
   const timeSinceCreated = moment(createdAt).fromNow();
+  const dispatch = useDispatch();
 
+  const likePostHandler = () => {
+    dispatch(likePostAction(postId));
+    // window.location.reload();
+  };
+
+  const dislikePostHandler = () => {
+    dispatch(dislikePostAction(postId));
+    // window.location.reload();
+  };
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 p-2 md:justify-start">
       <div className="flex items-center gap-1 text-2xl text-gray-400">
@@ -37,7 +54,10 @@ const PostStats = ({
 
         {views}
       </div>
-      <div className="flex items-center gap-1 m-2 text-2xl text-gray-400">
+      <button
+        onClick={likePostHandler}
+        className="flex items-center gap-1 m-2 text-2xl text-gray-400"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -54,8 +74,11 @@ const PostStats = ({
         </svg>
 
         {likes}
-      </div>
-      <div className="flex items-center gap-1 m-2 text-2xl text-gray-400">
+      </button>
+      <button
+        onClick={dislikePostHandler}
+        className="flex items-center gap-1 m-2 text-2xl text-gray-400"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -72,7 +95,7 @@ const PostStats = ({
         </svg>
 
         {dislikes}
-      </div>
+      </button>
 
       <div className="flex items-center gap-1 m-2 text-2xl text-gray-400">
         <svg

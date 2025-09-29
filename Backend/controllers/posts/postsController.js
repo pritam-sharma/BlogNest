@@ -206,11 +206,11 @@ exports.likePost = asyncHandler(async (req, res, next) => {
     (userId) => userId.toString() !== loggedInUserId.toString()
   );
   //resave the post
-  await post.save();
+  const updatedPost = await post.save();
   res.json({
     status: "success",
     message: "Post liked successfully",
-    updatedPost: post,
+    post: updatedPost,
   });
 });
 //@desc dislikeLike a Post
@@ -242,11 +242,11 @@ exports.disLikePost = asyncHandler(async (req, res, next) => {
     (userId) => userId.toString() !== loggedInUserId.toString()
   );
   //resave the post
-  await post.save();
+  const updatedPost = await post.save();
   res.json({
     status: "success",
     message: "Post disLiked successfully",
-    updatedPost: post,
+    post: updatedPost,
   });
 });
 //@desc clap a Post

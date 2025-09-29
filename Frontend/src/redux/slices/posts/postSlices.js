@@ -11,7 +11,6 @@ const INITIAL_STATE = {
 };
 
 //fetch Public posts action
-
 export const fetchPublicPostsAction = createAsyncThunk(
   "posts/fetch-public-post",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -26,8 +25,8 @@ export const fetchPublicPostsAction = createAsyncThunk(
     }
   }
 );
-//fetch Single posts action
 
+//fetch Single posts action
 export const getPostAction = createAsyncThunk(
   "posts/get-post",
   async (postId, { rejectWithValue, getState, dispatch }) => {
@@ -118,6 +117,83 @@ export const deletePostsAction = createAsyncThunk(
     }
   }
 );
+export const updatePostsAction = createAsyncThunk(
+  "post/update",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    //make request
+    try {
+      //convert payload to form data
+      const formData = new FormData();
+      formData.append("title", payload?.title);
+      formData.append("content", payload?.content);
+      formData.append("categoryId", payload?.category);
+      formData.append("file", payload?.image);
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.put(
+        `http://localhost:3000/api/v1/posts/${payload?.postId}`,
+        formData,
+        config
+      );
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  }
+);
+//like posts action
+export const likePostAction = createAsyncThunk(
+  "posts/like",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //http call
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.put(
+        `http://localhost:3000/api/v1/posts/like/${postId}`,
+        {},
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//dislike posts action
+export const dislikePostAction = createAsyncThunk(
+  "posts/dislike",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //http call
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.put(
+        `http://localhost:3000/api/v1/posts/dislike/${postId}`,
+        {},
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 //Posts Slice
 const postsSlice = createSlice({
   name: "posts",
@@ -192,6 +268,50 @@ const postsSlice = createSlice({
       state.post = action.payload;
     });
     builder.addCase(addPostsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    builder.addCase(updatePostsAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updatePostsAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+      state.post = action.payload;
+    });
+    builder.addCase(updatePostsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //like
+    builder.addCase(likePostAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(likePostAction.fulfilled, (state, action) => {
+      state.loading = false;
+      // state.success = true;
+      state.error = null;
+      state.post = action.payload;
+    });
+    builder.addCase(likePostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //dislike
+    builder.addCase(dislikePostAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(dislikePostAction.fulfilled, (state, action) => {
+      state.loading = false;
+      // state.success = true;
+      state.error = null;
+      state.post = action.payload;
+    });
+    builder.addCase(dislikePostAction.rejected, (state, action) => {
       state.loading = false;
       state.success = false;
       state.error = action.payload;

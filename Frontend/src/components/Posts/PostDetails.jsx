@@ -23,7 +23,8 @@ const PostDetails = () => {
   //! diapatch
   useEffect(() => {
     dispatch(getPostAction(postId));
-  }, [dispatch]);
+  }, [dispatch, postId, post?.post?.likes.length, post?.post?.dislikes.length]);
+
   //!Get the creator id of the post
   const creator = post?.post?.author?._id?.toString();
   //!Get the login of the current user
@@ -39,9 +40,7 @@ const PostDetails = () => {
   };
   return (
     <>
-      {loading ? (
-        <LoadingComponent />
-      ) : error ? (
+      {error ? (
         <ErrorMsg message={error?.message} />
       ) : (
         <section
@@ -113,6 +112,7 @@ const PostDetails = () => {
               comments={post?.post?.comments.length}
               createdAt={post?.post?.createdAt}
               readingTime={calculateReadingTime(post?.post?.content)}
+              postId={post?.post?._id}
             />
           </div>
           <div className="container px-4 mx-auto">
