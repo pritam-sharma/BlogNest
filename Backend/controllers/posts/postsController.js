@@ -152,7 +152,8 @@ exports.getPublicPosts = asyncHandler(async (req, res) => {
   const post = await Post.find({})
     .sort({ createdAt: -1 })
     .limit(4)
-    .populate("category");
+    .populate("category")
+    .populate("comments");
 
   res.status(201).json({
     status: "success",
