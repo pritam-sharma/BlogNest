@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { AiOutlineEye } from "react-icons/ai";
+import { MdWavingHand } from "react-icons/md";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import {
   dislikePostAction,
   getPostAction,
   likePostAction,
+  clapPostAction,
 } from "../../redux/slices/posts/postSlices";
 
 const PostStats = ({
@@ -16,11 +18,17 @@ const PostStats = ({
   readingTime,
   createdAt,
   postId,
+  claps,
 }) => {
   const timeSinceCreated = moment(createdAt).fromNow();
   const dispatch = useDispatch();
 
   const likePostHandler = () => {
+    dispatch(clapPostAction(postId));
+    // window.location.reload();
+  };
+
+  const clapPostHandler = () => {
     dispatch(likePostAction(postId));
     // window.location.reload();
   };
@@ -96,7 +104,13 @@ const PostStats = ({
 
         {dislikes}
       </button>
-
+      <button
+        onClick={clapPostHandler}
+        className="flex items-center gap-1 m-2 text-2xl text-gray-400"
+      >
+        <MdWavingHand />
+        {claps}
+      </button>
       <div className="flex items-center gap-1 m-2 text-2xl text-gray-400">
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -194,6 +194,54 @@ export const dislikePostAction = createAsyncThunk(
     }
   }
 );
+//Clape Action
+export const clapPostAction = createAsyncThunk(
+  "posts/clap",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //http call
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.put(
+        `http://localhost:3000/api/v1/posts/claps/${postId}`,
+        {},
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//post viewcount action
+export const postViewCountAction = createAsyncThunk(
+  "posts/post-view",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    //http call
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.put(
+        `http://localhost:3000/api/v1/posts/${postId}/post-view-count`,
+        {},
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
 //Posts Slice
 const postsSlice = createSlice({
   name: "posts",
@@ -312,6 +360,36 @@ const postsSlice = createSlice({
       state.post = action.payload;
     });
     builder.addCase(dislikePostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //clap
+    builder.addCase(clapPostAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(clapPostAction.fulfilled, (state, action) => {
+      state.loading = false;
+      // state.success = true;
+      state.error = null;
+      state.post = action.payload;
+    });
+    builder.addCase(clapPostAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //post view
+    builder.addCase(postViewCountAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(postViewCountAction.fulfilled, (state, action) => {
+      state.loading = false;
+      // state.success = true;
+      state.error = null;
+      state.post = action.payload;
+    });
+    builder.addCase(postViewCountAction.rejected, (state, action) => {
       state.loading = false;
       state.success = false;
       state.error = action.payload;

@@ -6,6 +6,7 @@ import {
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { postViewCountAction } from "../../redux/slices/posts/postSlices";
 import LoadingComponent from "../Alert/LoadingComponent";
 import ErrorMsg from "../Alert/ErrorMsg";
 import PostStats from "./PostStats";
@@ -23,8 +24,17 @@ const PostDetails = () => {
   //! diapatch
   useEffect(() => {
     dispatch(getPostAction(postId));
-  }, [dispatch, postId, post?.post?.likes.length, post?.post?.dislikes.length]);
+  }, [
+    dispatch,
+    postId,
+    post?.post?.likes.length,
+    post?.post?.dislikes.length,
+    post?.post?.claps,
+  ]);
 
+  useEffect(() => {
+    dispatch(postViewCountAction(postId));
+  }, [dispatch]);
   //!Get the creator id of the post
   const creator = post?.post?.author?._id?.toString();
   //!Get the login of the current user
@@ -106,13 +116,14 @@ const PostDetails = () => {
           >
             {/* Posts stats */}
             <PostStats
-              views={post?.post?.views}
+              views={post?.post?.postViews.length}
               likes={post?.post?.likes.length}
               dislikes={post?.post?.dislikes.length}
               comments={post?.post?.comments.length}
               createdAt={post?.post?.createdAt}
               readingTime={calculateReadingTime(post?.post?.content)}
               postId={post?.post?._id}
+              claps={post?.post?.claps}
             />
           </div>
           <div className="container px-4 mx-auto">
