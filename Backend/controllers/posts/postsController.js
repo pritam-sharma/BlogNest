@@ -315,3 +315,33 @@ exports.schedulePost = asyncHandler(async (req, res, next) => {
     post,
   });
 });
+//@desc post view count
+//@route PUT /api/v1/post/:id/post-view-count
+//@access private
+exports.postViewCount = asyncHandler(async (req, res, next) => {
+  //Get the id of the post
+  const postId = req.params.postId;
+  //Get the id of the logged in user
+  const loggedInUserId = req?.userAuth?._id;
+
+  //Find the post to be liked
+  const post = await Post.findById(postId);
+  if (!post) {
+    let error = new Error("Post not found");
+    error.status = 404;
+    next(error);
+    return;
+  }
+  //add the user to the likes array of the post
+  await Post.findByIdAndUpdate(
+    postId,
+    { $addToSet: { postViews: loggedInUserId } },
+    { new: true }
+  );
+  //resave the post
+  await post.save();
+  res.json({
+    status: "success",
+    message: "Post viewed successfully",
+  });
+});

@@ -12,6 +12,7 @@ const {
   clapPost,
   schedulePost,
   getPublicPosts,
+  postViewCount,
 } = require("../../controllers/Posts/postsController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
 const isAccountVerified = require("../../middlewares/isAccountVerified");
@@ -49,4 +50,8 @@ postRouter.put("/claps/:postId", isLoggedIn, clapPost);
 
 //?schedule a  Post Route
 postRouter.put("/schedule/:postId", isLoggedIn, schedulePost);
+
+//?Post ViewCount Route
+postRouter.put("/:postId/post-view-count", isLoggedIn, postViewCount);
+
 module.exports = postRouter;
