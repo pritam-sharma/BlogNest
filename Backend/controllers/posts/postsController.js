@@ -153,7 +153,14 @@ exports.getPublicPosts = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(4)
     .populate("category")
-    .populate("comments");
+    .populate({
+      path: "comments",
+      model: "Comment",
+      populate: {
+        path: "author",
+        select: "username",
+      },
+    });
 
   res.status(201).json({
     status: "success",

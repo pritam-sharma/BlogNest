@@ -12,11 +12,18 @@ const AddComment = ({ postId, comments }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const { success } = seSelector((state) => state?.comments);
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(createCommentAction({ ...formData, postId }));
   };
 
+  useEffect(() => {
+    if (success) {
+      window.location.reaload();
+    }
+  }, [dispatch, success]);
   return (
     <div className="bg-white rounded shadow">
       <div className="px-4 py-5 sm:p-6">

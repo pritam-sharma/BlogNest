@@ -21,7 +21,7 @@ const CommentsList = ({ comments }) => {
                   <div className="bg-blue-50 px-4 py-3 sm:px-6 flex justify-between items-center">
                     <div>
                       <h4 className="text-sm font-medium text-blue-600">
-                        {comment?.author}
+                        {comment?.author?.username}
                       </h4>
                       <p className="text-sm text-gray-500">
                         {new Date(comment?.createdAt).toDateString}
