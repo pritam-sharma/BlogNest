@@ -53,7 +53,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 });
 
 //@desc Profile view
-//@route GET /api/v1/users/profile/:id
+//@route GET /api/v1/users/profile
 //@access private
 exports.getProfile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.userAuth.id)
@@ -74,6 +74,20 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
   res.json({
     status: "success",
     message: "Profile fetched successfully",
+    user,
+  });
+});
+
+//@desc Profile view
+//@route GET /api/v1/users/public-profile/:userId
+//@access Public
+exports.getPublicProfile = asyncHandler(async (req, res, next) => {
+  const userId = req.params.userId;
+  const user = await User.findById(userId);
+
+  res.json({
+    status: "success",
+    message: "Public Profile Fetched",
     user,
   });
 });

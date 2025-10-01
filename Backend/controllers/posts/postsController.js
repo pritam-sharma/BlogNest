@@ -347,9 +347,10 @@ exports.postViewCount = asyncHandler(async (req, res, next) => {
     { new: true }
   );
   //resave the post
-  await post.save();
+  const updatedPost = (await post.save()).populate("author");
   res.json({
     status: "success",
     message: "Post viewed successfully",
+    post: updatedPost,
   });
 });

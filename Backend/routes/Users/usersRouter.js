@@ -12,6 +12,7 @@ const {
   resetPassword,
   accountVerificationEmail,
   verifyAccount,
+  getPublicProfile,
 } = require("../../controllers/Users/usersController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
 
@@ -21,8 +22,11 @@ const usersRouter = express.Router();
 usersRouter.post("/register", register);
 usersRouter.post("/login", login);
 
-//!profile view route
+//!profile route
 usersRouter.get("/profile", isLoggedIn, getProfile);
+
+//!Public profile route
+usersRouter.get("/public-profile/:userId", getPublicProfile);
 
 //!Block user Route
 usersRouter.put("/block/:userIdToBlock", isLoggedIn, blockUser);
