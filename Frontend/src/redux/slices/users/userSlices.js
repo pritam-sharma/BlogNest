@@ -24,7 +24,6 @@ const INITIAL_STATE = {
   },
 };
 //!Register Action
-
 export const registerAction = createAsyncThunk(
   "user/register",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -63,7 +62,29 @@ export const logoutAction = createAsyncThunk("user/logout", async () => {
   localStorage.removeItem("userInfo");
   return true;
 });
-
+//!getPublicProfile Action
+export const userPublicProfileAction = createAsyncThunk(
+  "user/user-public-profile",
+  async (userId, { rejectWithValue, getState, dispatch }) => {
+    //make request
+    try {
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.get(
+        `http://localhost:3000/api/v1/users/public-profile/${userId}`,
+        config
+      );
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  }
+);
 const usersSlice = createSlice({
   name: "users",
   initialState: INITIAL_STATE,
@@ -95,6 +116,21 @@ const usersSlice = createSlice({
       state.user = action.payload;
     });
     builder.addCase(registerAction.rejected, (state, action) => {
+      state.loading = false;
+      state.success = false;
+      state.error = action.payload;
+    });
+    //getPublicProfile
+    builder.addCase(userPublicProfileAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(userPublicProfileAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.error = null;
+      state.profile = action.payload;
+    });
+    builder.addCase(userPublicProfileAction.rejected, (state, action) => {
       state.loading = false;
       state.success = false;
       state.error = action.payload;

@@ -90,14 +90,17 @@ const PostDetails = () => {
                     alt="profile-image"
                   />
                 </div>
-                <div className="w-auto px-2">
+                <Link
+                  to={`user-public-profile/${post?.post?.author?._id}`}
+                  className="w-auto px-2"
+                >
                   <h4 className="text-base font-bold md:text-lg text-coolGray-800">
                     {post?.post?.author?.username}
                   </h4>
                   {/* <p className="text-base md:text-lg text-coolGray-500">
                     12 October 2021
                   </p> */}
-                </div>
+                </Link>
               </div>
             </div>
           </div>

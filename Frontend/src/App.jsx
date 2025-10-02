@@ -23,7 +23,7 @@ const App = () => {
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route
-            path="/user-profile"
+            path="/user-public-profile/:userId"
             element={
               <ProtectedRoute>
                 {" "}

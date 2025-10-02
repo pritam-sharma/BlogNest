@@ -1,4 +1,8 @@
+import { useEffect } from "react";
 import { FiUpload } from "react-icons/fi";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { userPublicProfileAction } from "../../redux/slices/users/userSlices";
 const profile = {
   name: "Ricardo Cooper",
   imageUrl:
@@ -22,6 +26,13 @@ const profile = {
 };
 
 export default function UserProfile() {
+  //get the userId from params
+  const { userId } = useParams();
+  //get the dispatch function
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(userPublicProfileAction(userId));
+  }, [dispatch]);
   return (
     <>
       <div className="flex h-full">
