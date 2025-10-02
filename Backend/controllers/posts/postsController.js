@@ -345,12 +345,12 @@ exports.postViewCount = asyncHandler(async (req, res, next) => {
     postId,
     { $addToSet: { postViews: loggedInUserId } },
     { new: true }
-  );
+  ).populate("author");
   //resave the post
-  const updatedPost = (await post.save()).populate("author");
+  await post.save();
   res.json({
     status: "success",
     message: "Post viewed successfully",
-    post: updatedPost,
+    post: post,
   });
 });

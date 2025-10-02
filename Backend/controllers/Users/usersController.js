@@ -83,7 +83,9 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
 //@access Public
 exports.getPublicProfile = asyncHandler(async (req, res, next) => {
   const userId = req.params.userId;
-  const user = await User.findById(userId);
+  const user = await User.findById(userId)
+    .select("-password")
+    .populate("posts");
 
   res.json({
     status: "success",
