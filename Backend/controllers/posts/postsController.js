@@ -155,7 +155,7 @@ exports.getPublicPosts = asyncHandler(async (req, res) => {
     .populate("category")
     .populate({
       path: "comments",
-      model: "Comment",
+      model: "Comments",
       populate: {
         path: "author",
         select: "username",
