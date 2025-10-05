@@ -120,10 +120,10 @@ const PostDetails = () => {
           >
             {/* Posts stats */}
             <PostStats
-              views={post?.post?.postViews.length}
-              likes={post?.post?.likes.length}
-              dislikes={post?.post?.dislikes.length}
-              comments={post?.post?.comments.length}
+              views={post?.post?.postViews?.length}
+              likes={post?.post?.likes?.length}
+              dislikes={post?.post?.dislikes?.length}
+              comments={post?.post?.comments?.length}
               createdAt={post?.post?.createdAt}
               readingTime={calculateReadingTime(post?.post?.content)}
               postId={post?.post?._id}

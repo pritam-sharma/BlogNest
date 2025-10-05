@@ -11,6 +11,7 @@ import AddPost from "./components/Posts/AddPost";
 import PostDetails from "./components/Posts/PostDetails";
 import PostList from "./components/Posts/PostList";
 import UpdatePost from "./components/Posts/UpdatePost";
+import Register from "./components/Users/Register";
 const App = () => {
   const { userAuth } = useSelector((state) => state.users);
   console.log("first", userAuth);
@@ -22,6 +23,14 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
+          <Route
+            path="/register"
+            element={
+              <div className="flex items-center justify-center min-h-screen">
+                <Register />
+              </div>
+            }
+          />
           <Route
             path="/user-public-profile/:userId"
             element={
