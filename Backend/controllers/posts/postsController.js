@@ -95,7 +95,8 @@ exports.getSinglePost = asyncHandler(async (req, res) => {
   // Find post by ID
   const post = await Post.findById(postId)
     .populate("author")
-    .populate("category");
+    .populate("category")
+    .populate("comments");
 
   // If post not found
   if (post) {
@@ -331,7 +332,6 @@ exports.postViewCount = asyncHandler(async (req, res, next) => {
   const postId = req.params.postId;
   //Get the id of the logged in user
   const loggedInUserId = req?.userAuth?._id;
-
   //Find the post to be liked
   const post = await Post.findById(postId);
   if (!post) {
@@ -346,6 +346,7 @@ exports.postViewCount = asyncHandler(async (req, res, next) => {
     { $addToSet: { postViews: loggedInUserId } },
     { new: true }
   ).populate("author");
+
   //resave the post
   await post.save();
   res.json({
