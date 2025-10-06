@@ -22,7 +22,7 @@ const AddComment = ({ postId, comments }) => {
 
   useEffect(() => {
     if (success) {
-      window.location.reaload();
+      window?.location?.reload();
     }
   }, [dispatch, success]);
   return (

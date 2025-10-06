@@ -105,7 +105,7 @@ const PostDetails = () => {
             </div>
           </div>
           <img
-            className="w-full mx-auto mb-10"
+            className="w-[500px] max-w-full mx-auto mb-10 rounded-lg shadow"
             src={post?.post?.image}
             alt="post"
           />
@@ -119,6 +119,7 @@ const PostDetails = () => {
             }}
           >
             {/* Posts stats */}
+
             <PostStats
               views={post?.post?.postViews?.length}
               likes={post?.post?.likes?.length}

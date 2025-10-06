@@ -24,7 +24,6 @@ const Register = () => {
   //handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("register form data", formData);
     dispatch(
       registerAction({
         username: formData.username,
