@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { loginAction } from "../../redux/slices/users/userSlices";
-import { useSelector } from "react-redux";
 import LoadingComponent from "../Alert/LoadingComponent";
 import ErrorMsg from "../Alert/ErrorMsg";
 import SuccessMsg from "../Alert/SuccessMsg";
@@ -17,27 +14,25 @@ const Login = () => {
     username: "",
   });
 
-  //handle form change
+  // handle form change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //handle form submit
+  // handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
       loginAction({ username: formData.username, password: formData.password })
     );
-    // reset form
-    setFormData({
-      password: "",
-      username: "",
-    });
+    setFormData({ password: "", username: "" });
   };
-  //store data
+
+  // store data
   const { userAuth, loading, error, success } = useSelector(
     (state) => state.users
   );
+
   useEffect(() => {
     if (userAuth?.userInfo?.token) {
       navigate("/user-profile", { replace: true });
@@ -45,67 +40,91 @@ const Login = () => {
   }, [userAuth, navigate]);
 
   return (
-    <section className="py-16 xl:pb-56 bg-white overflow-hidden">
-      <div className="container px-4 mx-auto">
-        <div className="text-center max-w-md mx-auto">
-          <a className="mb-36 inline-block" href="#">
-            <img src="flaro-assets/logos/flaro-logo-black-xl.svg" />
-          </a>
-          <h2 className="mb-4 text-6xl md:text-7xl text-center font-bold font-heading tracking-px-n leading-tight">
-            Login to your account
-          </h2>
-          <p className="mb-12 font-medium text-lg text-gray-600 leading-normal">
-            Enter your details below.
-          </p>
-          {/**Display error */}
-          {error && <ErrorMsg message={error?.message} />}
-          {/*Success message */}
-          {success && <SuccessMsg message="Login Successful" />}
-          <form onSubmit={handleSubmit}>
-            <label className="block mb-5">
-              <input
-                className="px-4 py-3.5 w-full text-gray-500 font-medium placeholder-gray-500 bg-white outline-none border border-gray-300 rounded-lg focus:ring focus:ring-indigo-300"
-                id="signUpInput2-1"
-                type="text"
-                placeholder="Enter Username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-            </label>
+    <section className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <img
+            src="flaro-assets/logos/flaro-logo-black-xl.svg"
+            alt="BlogNest Logo"
+            className="h-12"
+          />
+        </div>
 
-            <label className="block mb-5">
-              <input
-                className="px-4 py-3.5 w-full text-gray-500 font-medium placeholder-gray-500 bg-white outline-none border border-gray-300 rounded-lg focus:ring focus:ring-indigo-300"
-                id="signUpInput2-3"
-                type="password"
-                placeholder="Enter your Password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </label>
-            {loading ? (
-              <LoadingComponent />
-            ) : (
-              <button
-                className="mb-8 py-4 px-9 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200"
-                type="submit"
-              >
-                Login Account
-              </button>
-            )}
+        {/* Heading */}
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
+          Welcome Back
+        </h2>
+        <p className="text-center text-gray-500 mb-6">
+          Login to your BlogNest account
+        </p>
 
-            <p className="font-medium">
-              <span className="m-2">Forgot Password?</span>
-              <Link
-                className="text-indigo-600 hover:text-indigo-700"
-                to="/forgot-password"
-              >
-                Reset Password
-              </Link>
-            </p>
-          </form>
+        {/* Alerts */}
+        {error && <ErrorMsg message={error?.message} />}
+        {success && <SuccessMsg message="Login Successful" />}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Username */}
+          <div>
+            <label className="block mb-1 text-gray-600 font-medium text-sm">
+              Username
+            </label>
+            <input
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              type="text"
+              placeholder="Enter your username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block mb-1 text-gray-600 font-medium text-sm">
+              Password
+            </label>
+            <input
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              type="password"
+              placeholder="Enter your password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Submit Button */}
+          {loading ? (
+            <LoadingComponent />
+          ) : (
+            <button
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition duration-200"
+              type="submit"
+            >
+              Login
+            </button>
+          )}
+        </form>
+
+        {/* Extra Links */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/forgot-password"
+            className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+          >
+            Forgot your password?
+          </Link>
+        </div>
+        <div className="mt-4 text-center text-sm text-gray-600">
+          Don’t have an account?{" "}
+          <Link
+            to="/register"
+            className="text-indigo-600 hover:text-indigo-700 font-semibold"
+          >
+            Sign Up
+          </Link>
         </div>
       </div>
     </section>
