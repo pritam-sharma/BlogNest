@@ -96,7 +96,14 @@ exports.getSinglePost = asyncHandler(async (req, res) => {
   const post = await Post.findById(postId)
     .populate("author")
     .populate("category")
-    .populate("comments");
+    .populate({
+      path: "comment",
+      model: "Comment",
+      populate: {
+        path: "author",
+        select: "username",
+      },
+    });
 
   // If post not found
   if (post) {
@@ -156,7 +163,7 @@ exports.getPublicPosts = asyncHandler(async (req, res) => {
     .populate("category")
     .populate({
       path: "comments",
-      model: "Comments",
+      model: "Comment",
       populate: {
         path: "author",
         select: "username",

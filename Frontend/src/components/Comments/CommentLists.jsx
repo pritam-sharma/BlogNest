@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 const CommentsList = ({ comments }) => {
   return (
     <div className="flex flex-col space-y-4">
