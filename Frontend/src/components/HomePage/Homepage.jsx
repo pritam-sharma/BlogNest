@@ -34,7 +34,7 @@ const Homepage = () => {
         </div>
 
         {/* Hero Section */}
-        <div className="relative py-20 xl:pt-16 xl:pb-24">
+        <div className="relative">
           <div className="container px-4 mx-auto">
             <div className="flex flex-wrap items-center">
               {/* Left Content */}

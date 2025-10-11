@@ -34,7 +34,7 @@ const Register = () => {
   }, [user?.status, navigate]);
 
   return (
-    <section className="py-16 xl:pb-56 bg-white overflow-hidden">
+    <section className="py-20 mx-32 xl:pb-56 bg-white overflow-hidden">
       <div className="container px-4 mx-auto">
         <div className="text-center max-w-md mx-auto bg-white shadow-2xl rounded-2xl p-10">
           {/* Logo */}
