@@ -5,6 +5,7 @@ import { registerAction } from "../../redux/slices/users/userSlices";
 import ErrorMsg from "../Alert/ErrorMsg";
 import SuccessMsg from "../Alert/SuccessMsg";
 import LoadingComponent from "../Alert/LoadingComponent";
+import BlogNest from "../../assets/BlogNest.png";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -38,7 +39,11 @@ const Register = () => {
         <div className="text-center max-w-md mx-auto bg-white shadow-2xl rounded-2xl p-10">
           {/* Logo */}
           <a className="mb-8 inline-block" href="#">
-            <img src="flaro-assets/logos/flaro-logo-black-xl.svg" alt="Logo" />
+            <img
+              src={BlogNest}
+              alt="Logo"
+              className="w-16 h-16 rounded-full object-cover"
+            />
           </a>
 
           {/* Title */}
