@@ -5,6 +5,7 @@ import { loginAction } from "../../redux/slices/users/userSlices";
 import LoadingComponent from "../Alert/LoadingComponent";
 import ErrorMsg from "../Alert/ErrorMsg";
 import SuccessMsg from "../Alert/SuccessMsg";
+import BlogNest from "../../assets/BlogNest.png";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -44,11 +45,7 @@ const Login = () => {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img
-            src="flaro-assets/logos/flaro-logo-black-xl.svg"
-            alt="BlogNest Logo"
-            className="h-12"
-          />
+          <img src={BlogNest} alt="BlogNest Logo" className="h-12" />
         </div>
 
         {/* Heading */}
