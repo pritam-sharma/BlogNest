@@ -1,8 +1,8 @@
 import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PlusIcon } from "@heroicons/react/20/solid";
+import { Disclosure, Transition } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import BlogNest from "../../assets/BlogNest.png";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -10,15 +10,19 @@ function classNames(...classes) {
 
 export default function PublicNavbar() {
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure
+      as="nav"
+      className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50"
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 justify-between">
-              <div className="flex">
-                <div className="-ml-2 mr-2 flex items-center md:hidden">
-                  {/* Mobile menu button */}
-                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+            <div className="flex h-16 justify-between items-center">
+              {/* Left Section */}
+              <div className="flex items-center gap-3">
+                {/* Mobile menu button */}
+                <div className="flex items-center md:hidden">
+                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-indigo-100 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -27,78 +31,106 @@ export default function PublicNavbar() {
                     )}
                   </Disclosure.Button>
                 </div>
-                <div className="flex flex-shrink-0 items-center">
+
+                {/* Logo */}
+                <Link to="/" className="flex items-center gap-2">
                   <img
-                    className="block h-8 w-auto lg:hidden"
-                    src="https://cdn-icons-png.flaticon.com/512/1458/1458485.png"
-                    alt="BloggyTech"
+                    src={BlogNest}
+                    alt="BlogNest Logo"
+                    className="w-10 h-10 rounded-full object-cover shadow-sm border border-indigo-200"
                   />
-                  <img
-                    className="hidden h-8 w-auto lg:block"
-                    src="https://cdn-icons-png.flaticon.com/512/1458/1458485.png"
-                    alt="BloggyTech"
-                  />
-                </div>
-                <div className="hidden md:ml-6 md:flex md:space-x-8">
-                  {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
+                  <span className="hidden md:block text-xl font-bold text-indigo-600 tracking-tight">
+                    BlogNest
+                  </span>
+                </Link>
+
+                {/* Desktop Navigation Links */}
+                <div className="hidden md:ml-8 md:flex md:space-x-6">
                   <Link
-                    to={"/"}
-                    className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900 focus:outline-none focus:border-indigo-700"
+                    to="/"
+                    className="text-gray-800 hover:text-indigo-600 font-medium transition-colors duration-200"
                   >
                     Home
                   </Link>
                   <Link
-                    to={"/posts"}
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:outline-none focus:border-indigo-700"
+                    to="/posts"
+                    className="text-gray-600 hover:text-indigo-600 font-medium transition-colors duration-200"
                   >
                     Posts
                   </Link>
                   <Link
-                    to={"/login"}
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:outline-none focus:border-indigo-700"
+                    to="/login"
+                    className="text-gray-600 hover:text-indigo-600 font-medium transition-colors duration-200"
                   >
                     Login
                   </Link>
                   <Link
-                    to={"/register"}
-                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:outline-none focus:border-indigo-700"
+                    to="/register"
+                    className="text-gray-600 hover:text-indigo-600 font-medium transition-colors duration-200"
                   >
                     Register
                   </Link>
                 </div>
               </div>
+
+              {/* Right Section */}
               <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Link
-                    to={"/add-post"}
-                    className="ml-2 relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    <PlusIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-                    Add New Post
-                  </Link>
-                </div>
+                <Link
+                  to="/add-post"
+                  className="flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-md hover:from-indigo-700 hover:to-indigo-600 transition-all duration-200"
+                >
+                  <PlusIcon className="h-5 w-5" />
+                  <span>Add Post</span>
+                </Link>
               </div>
             </div>
           </div>
 
-          <Disclosure.Panel className="md:hidden">
-            <div className="space-y-1 pt-2 pb-3">
-              {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 sm:pl-5 sm:pr-6 focus:outline-none focus:border-indigo-700"
-              >
-                Home
-              </Disclosure.Button>
-              <Link
-                to={"/posts"}
-                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6 focus:outline-none focus:border-indigo-700"
-              >
-                Posts
-              </Link>
-            </div>
-          </Disclosure.Panel>
+          {/* Mobile Menu */}
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-200"
+            enterFrom="opacity-0 transform scale-95"
+            enterTo="opacity-100 transform scale-100"
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100 transform scale-100"
+            leaveTo="opacity-0 transform scale-95"
+          >
+            <Disclosure.Panel className="md:hidden border-t border-gray-200 bg-white">
+              <div className="space-y-1 py-3 px-4">
+                <Link
+                  to="/"
+                  className="block text-gray-800 hover:text-indigo-600 font-medium py-2"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/posts"
+                  className="block text-gray-600 hover:text-indigo-600 font-medium py-2"
+                >
+                  Posts
+                </Link>
+                <Link
+                  to="/login"
+                  className="block text-gray-600 hover:text-indigo-600 font-medium py-2"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="block text-gray-600 hover:text-indigo-600 font-medium py-2"
+                >
+                  Register
+                </Link>
+                <Link
+                  to="/add-post"
+                  className="block text-indigo-600 font-medium py-2"
+                >
+                  Add Post
+                </Link>
+              </div>
+            </Disclosure.Panel>
+          </Transition>
         </>
       )}
     </Disclosure>
