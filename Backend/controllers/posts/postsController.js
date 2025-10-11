@@ -97,7 +97,7 @@ exports.getSinglePost = asyncHandler(async (req, res) => {
     .populate("author")
     .populate("category")
     .populate({
-      path: "comment",
+      path: "comments",
       model: "Comment",
       populate: {
         path: "author",
