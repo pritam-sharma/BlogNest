@@ -11,7 +11,7 @@ const categoriesRouter = require("./routes/categories/categoriesRouter");
 const postRouter = require("./routes/Posts/postRouter");
 const commentRouter = require("./routes/Comments/commentRouter");
 const sendEmail = require("./utils/sendEmails");
-
+const path = require("path");
 //! Create an express app
 const app = express();
 
@@ -37,6 +37,14 @@ app.use("/api/v1/posts", postRouter);
 
 //? Setup the Comment Router
 app.use("/api/v1/comments", commentRouter);
+
+// Serve the frontend build folder
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+// Catch-all route to serve React's index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
+});
 
 app.get("/", (req, res) => {
   res.send("Backend is running successfully 🚀");
