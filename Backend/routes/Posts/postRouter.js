@@ -13,12 +13,18 @@ const {
   schedulePost,
   getPublicPosts,
   postViewCount,
-} = require("../../controllers/Posts/postsController.js");
+} = require("../../controllers/Posts/postsController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
 const isAccountVerified = require("../../middlewares/isAccountVerified");
 const postRouter = express.Router();
 
 const upload = multer({ storage: storage });
+
+console.log("Current directory:", __dirname);
+console.log(
+  "Trying to load:",
+  __dirname + "/../../controllers/Posts/postsController.js"
+);
 
 //?Create Post Route
 // postRouter.post("/", isLoggedIn, isAccountVerified, createPost);
