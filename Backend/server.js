@@ -38,14 +38,6 @@ app.use("/api/v1/posts", postRouter);
 //? Setup the Comment Router
 app.use("/api/v1/comments", commentRouter);
 
-// Serve the frontend build folder
-app.use(express.static(path.join(__dirname, "../client/build")));
-
-// Catch-all route to serve React's index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
-});
-
 app.get("/", (req, res) => {
   res.send("Backend is running successfully 🚀");
 });
