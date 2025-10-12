@@ -13,7 +13,7 @@ const {
   schedulePost,
   getPublicPosts,
   postViewCount,
-} = require("../../controllers/Posts/postsController");
+} = require("../../controllers/posts/postsController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
 const isAccountVerified = require("../../middlewares/isAccountVerified");
 const postRouter = express.Router();
