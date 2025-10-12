@@ -38,6 +38,10 @@ app.use("/api/v1/posts", postRouter);
 //? Setup the Comment Router
 app.use("/api/v1/comments", commentRouter);
 
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully 🚀");
+});
+
 //? Not found route handler
 app.use(notFound);
 
