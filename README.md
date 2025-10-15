@@ -1,6 +1,7 @@
 # BlogNest
 
-![BlogNest Logo](path-to-your-logo.png)
+![BlogNest Logo](/Frontend/src/assets/logo.png
+)
 
 **BlogNest** is a full-stack blogging platform built with the **MERN stack (MongoDB, Express, React, Node.js)**. Users can create, read, update, and delete blogs, explore posts by category, and enjoy a responsive, modern interface.
 
