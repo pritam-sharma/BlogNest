@@ -23,6 +23,9 @@ const INITIAL_STATE = {
     loading: false,
   },
 };
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 //!Register Action
 export const registerAction = createAsyncThunk(
   "user/register",
@@ -30,7 +33,7 @@ export const registerAction = createAsyncThunk(
     //make request
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/users/register",
+        `${API_BASE_URL}/api/v1/users/register`,
         payload
       );
       return data;
@@ -46,7 +49,7 @@ export const loginAction = createAsyncThunk(
     //make request
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/users/login",
+        `${API_BASE_URL}/api/v1/users/login`,
         payload
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
@@ -76,7 +79,7 @@ export const userPublicProfileAction = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `http://localhost:3000/api/v1/users/public-profile/${userId}`,
+        `${API_BASE_URL}/api/v1/users/public-profile/${userId}`,
         config
       );
       return data;

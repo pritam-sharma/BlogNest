@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   comments: [],
   comment: null,
 };
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 //!Create Comment Action
 export const createCommentAction = createAsyncThunk(
@@ -24,7 +25,7 @@ export const createCommentAction = createAsyncThunk(
         },
       };
       const { data } = await axios.post(
-        `http://localhost:3000/api/v1/comments/${payload?.postId}`,
+        `${API_BASE_URL}/api/v1/comments/${payload?.postId}`,
         {
           message: payload?.message,
         },

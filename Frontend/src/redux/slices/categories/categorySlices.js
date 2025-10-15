@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   categories: [],
   category: null,
 };
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 //fetch Public categories action
 export const fetchCategoriesAction = createAsyncThunk(
@@ -16,9 +17,7 @@ export const fetchCategoriesAction = createAsyncThunk(
   async (payload, { rejectWithValue, getState, dispatch }) => {
     //http call
     try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/v1/categories"
-      );
+      const { data } = await axios.get(`${API_BASE_URL}/api/v1/categories`);
       console.log("data from categorySlices", data);
       return data;
     } catch (error) {
