@@ -15,10 +15,28 @@ const AddPost = () => {
   //get categories from store
   const { categories } = useSelector((state) => state?.categories);
 
-  const options = categories?.allCategories?.map((cat) => ({
+  // const options = categories?.allCategories?.map((cat) => ({
+  //   value: cat._id,
+  //   label: cat.name,
+  // }));
+
+  const defaultCategories = [
+  { value: "frontend", label: "Frontend" },
+  { value: "backend", label: "Backend" },
+  { value: "database", label: "Database" },
+  { value: "ai-ml", label: "AI/ML" },
+];
+
+const options = [
+  ...defaultCategories, // add default categories first
+  ...(categories?.allCategories?.map((cat) => ({
     value: cat._id,
     label: cat.name,
-  }));
+  })) || []), // add fetched categories if any
+];
+
+console.log(options);
+
 
   useEffect(() => {
     //dispatch action to fetch categories
