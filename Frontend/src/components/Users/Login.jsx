@@ -36,7 +36,7 @@ const Login = () => {
 
   useEffect(() => {
     if (userAuth?.userInfo?.token) {
-      navigate("/user-profile", { replace: true });
+      navigate("/posts", { replace: true });
     }
   }, [userAuth, navigate]);
 
