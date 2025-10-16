@@ -34,23 +34,23 @@ const Register = () => {
   }, [user?.status, navigate]);
 
   return (
-    <section className="py-20 mx-32 xl:pb-56 bg-white overflow-hidden">
-      <div className="container px-4 mx-auto">
-        <div className="text-center max-w-md mx-auto bg-white shadow-2xl rounded-2xl p-10">
+    <section className="py-10 sm:py-16 bg-white overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full mx-auto bg-white shadow-2xl rounded-2xl p-6 sm:p-8 lg:p-10">
           {/* Logo */}
-          <a className="mb-8 inline-block" href="#">
+          <div className="flex justify-center mb-6">
             <img
               src={BlogNest}
               alt="Logo"
               className="w-16 h-16 rounded-full object-cover"
             />
-          </a>
+          </div>
 
           {/* Title */}
-          <h2 className="mb-4 text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 text-center">
             Create your account
           </h2>
-          <p className="mb-8 text-gray-600">
+          <p className="mb-6 text-gray-600 text-center text-sm sm:text-base">
             Join BlogNest and start sharing your ideas with the world.
           </p>
 
@@ -61,11 +61,11 @@ const Register = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="text-left">
             {/* Username */}
-            <label className="block mb-5">
+            <label className="block mb-4">
               <input
-                className="px-4 py-3.5 w-full text-gray-700 placeholder-gray-500 
+                className="px-4 py-3 w-full text-gray-700 placeholder-gray-500 
                 bg-white border border-gray-300 rounded-lg outline-none 
-                focus:ring-2 focus:ring-indigo-300"
+                focus:ring-2 focus:ring-indigo-300 text-sm sm:text-base"
                 type="text"
                 placeholder="Enter Username"
                 name="username"
@@ -75,11 +75,11 @@ const Register = () => {
             </label>
 
             {/* Email */}
-            <label className="block mb-5">
+            <label className="block mb-4">
               <input
-                className="px-4 py-3.5 w-full text-gray-700 placeholder-gray-500 
+                className="px-4 py-3 w-full text-gray-700 placeholder-gray-500 
                 bg-white border border-gray-300 rounded-lg outline-none 
-                focus:ring-2 focus:ring-indigo-300"
+                focus:ring-2 focus:ring-indigo-300 text-sm sm:text-base"
                 type="email"
                 placeholder="Enter Email"
                 name="email"
@@ -89,11 +89,11 @@ const Register = () => {
             </label>
 
             {/* Password */}
-            <label className="block mb-5">
+            <label className="block mb-6">
               <input
-                className="px-4 py-3.5 w-full text-gray-700 placeholder-gray-500 
+                className="px-4 py-3 w-full text-gray-700 placeholder-gray-500 
                 bg-white border border-gray-300 rounded-lg outline-none 
-                focus:ring-2 focus:ring-indigo-300"
+                focus:ring-2 focus:ring-indigo-300 text-sm sm:text-base"
                 type="password"
                 placeholder="Enter Password"
                 name="password"
@@ -107,9 +107,9 @@ const Register = () => {
               <LoadingComponent />
             ) : (
               <button
-                className="mb-6 py-4 px-9 w-full text-white font-semibold 
+                className="w-full py-3 sm:py-4 text-white font-semibold 
                 bg-indigo-600 hover:bg-indigo-700 border border-indigo-700 
-                rounded-xl shadow-lg transition duration-200"
+                rounded-lg shadow-md transition duration-200 text-sm sm:text-base"
                 type="submit"
               >
                 Register Account
@@ -118,7 +118,7 @@ const Register = () => {
           </form>
 
           {/* Footer */}
-          <p className="text-sm text-gray-600">
+          <p className="mt-6 text-xs sm:text-sm text-gray-600 text-center">
             Already have an account?{" "}
             <Link
               className="text-indigo-600 hover:text-indigo-700 font-medium"

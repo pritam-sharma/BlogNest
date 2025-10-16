@@ -73,7 +73,9 @@ const Homepage = () => {
               </div>
 
               {/* Register Form */}
-              <Register />
+              <div className="w-full lg:w-1/2">
+                <Register />
+              </div>
             </div>
           </div>
         </div>
