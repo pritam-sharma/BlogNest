@@ -12,6 +12,7 @@ import PostDetails from "./components/Posts/PostDetails";
 import PostList from "./components/Posts/PostList";
 import UpdatePost from "./components/Posts/UpdatePost";
 import Register from "./components/Users/Register";
+import Footer from "./components/Users/Footer";
 const App = () => {
   const { userAuth } = useSelector((state) => state.users);
   console.log("first", userAuth);
@@ -77,6 +78,7 @@ const App = () => {
             }
           />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );

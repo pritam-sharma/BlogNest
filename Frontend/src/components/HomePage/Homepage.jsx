@@ -1,6 +1,5 @@
 import Register from "../Users/Register";
 import PublicPosts from "../Posts/PublicPosts";
-import Footer from "../Users/Footer";
 
 const Homepage = () => {
   return (
@@ -82,7 +81,6 @@ const Homepage = () => {
 
       {/* Public Posts Section */}
       <PublicPosts />
-      <Footer />
     </div>
   );
 };
