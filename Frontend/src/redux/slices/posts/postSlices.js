@@ -62,15 +62,8 @@ export const fetchPrivatePostsAction = createAsyncThunk(
 //!Create post Action
 export const addPostsAction = createAsyncThunk(
   "post/create",
-  async (payload, { rejectWithValue, getState, dispatch }) => {
-    //make request
+  async (postData, { rejectWithValue, getState }) => {
     try {
-      //convert payload to form data
-      const formData = new FormData();
-      formData.append("title", payload?.title);
-      formData.append("content", payload?.content);
-      formData.append("categoryId", payload?.category);
-      formData.append("file", payload?.image);
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
         headers: {
@@ -80,15 +73,16 @@ export const addPostsAction = createAsyncThunk(
       };
       const { data } = await axios.post(
         `${API_BASE_URL}/api/v1/posts`,
-        formData,
+        postData,
         config
       );
       return data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
+
 //!Delete post Action
 export const deletePostsAction = createAsyncThunk(
   "post/delete-post",

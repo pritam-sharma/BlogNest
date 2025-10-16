@@ -7,7 +7,6 @@ const Category = require("../../models/Categories/Categories");
 //@route POST /api/v1/posts
 //@access private
 exports.createPost = asyncHandler(async (req, res, next) => {
-  console.log("reqest body of createpost : ", req.body);
   // Get the payload
   const { title, categoryId, content } = req.body;
   //Check if the post is present
