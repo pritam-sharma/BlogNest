@@ -94,8 +94,8 @@ exports.getSinglePost = asyncHandler(async (req, res) => {
 
   // Find post by ID
   const post = await Post.findById(postId)
-    .populate("author")
-    .populate("category")
+    .populate("author", "username email")
+    .populate("category", "name")
     .populate({
       path: "comments",
       model: "Comment",

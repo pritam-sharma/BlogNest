@@ -69,7 +69,7 @@ const PostDetails = () => {
               </div>
               <div className="flex items-center justify-center">
                 <p className="inline-block font-medium text-green-500">
-                  {post?.post?.auther?.username}
+                  {post?.post?.author?.username}
                 </p>
                 <span className="mx-1 text-green-500">•</span>
                 <p className="inline-block font-medium text-green-500">
@@ -84,11 +84,13 @@ const PostDetails = () => {
               {/* </p> */}
               <div className="flex items-center justify-center -mx-2 text-left">
                 <div className="w-auto px-2">
-                  <img
-                    className="w-12 h-12 rounded-full"
-                    src={post?.post?.image}
-                    alt="profile-image"
-                  />
+                  {post?.post?.image ? (
+                    <img
+                      className="w-12 h-12 rounded-full"
+                      src={post?.post?.image}
+                      alt="profile-image"
+                    />
+                  ) : null}
                 </div>
                 <Link
                   to={`user-public-profile/${post?.post?.author?._id}`}
@@ -104,11 +106,14 @@ const PostDetails = () => {
               </div>
             </div>
           </div>
-          <img
-            className="w-[500px] max-w-full mx-auto mb-10 rounded-lg shadow"
-            src={post?.post?.image}
-            alt="post"
-          />
+
+          {post?.post?.image ? (
+            <img
+              className="w-[500px] max-w-full mx-auto mb-10 rounded-lg shadow"
+              src={post?.post?.image}
+              alt="post"
+            />
+          ) : null}
 
           <div
             style={{

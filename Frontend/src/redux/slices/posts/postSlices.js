@@ -98,7 +98,7 @@ export const deletePostsAction = createAsyncThunk(
       };
       const { data } = await axios.delete(
         `${API_BASE_URL}/api/v1/posts/${postId}`,
-        formData,
+
         config
       );
       return data;
