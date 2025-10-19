@@ -99,9 +99,9 @@ const PostDetails = () => {
                   <h4 className="text-base font-bold md:text-lg text-coolGray-800">
                     {post?.post?.author?.username}
                   </h4>
-                  {/* <p className="text-base md:text-lg text-coolGray-500">
-                    12 October 2021
-                  </p> */}
+                  <p className="text-base md:text-lg text-coolGray-500">
+                    {post?.post?.date}
+                  </p>
                 </Link>
               </div>
             </div>
