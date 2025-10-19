@@ -24,12 +24,12 @@ const PostStats = ({
   const dispatch = useDispatch();
 
   const likePostHandler = () => {
-    dispatch(clapPostAction(postId));
+    dispatch(likePostAction(postId));
     // window.location.reload();
   };
 
   const clapPostHandler = () => {
-    dispatch(likePostAction(postId));
+    dispatch(clapPostAction(postId));
     // window.location.reload();
   };
 
