@@ -5,7 +5,7 @@ const Homepage = () => {
   return (
     <div>
       <section
-        className="relative bg-white overflow-hidden"
+        className="relative bg-white overflow-hidden "
         style={{
           backgroundImage: 'url("flex-ui-assets/elements/pattern-white.svg")',
           backgroundPosition: "center",
@@ -40,7 +40,7 @@ const Homepage = () => {
               {/* Left Content */}
               <div className="w-full lg:w-1/2 mb-20 lg:mb-0">
                 <div className="flex justify-center">
-                  <span className="inline-block mb-6 px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-full">
+                  <span className="inline-block mt-16 sm:mt-6 mb-6 px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-full">
                     Welcome to BlogNest
                   </span>
                 </div>
