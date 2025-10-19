@@ -15,23 +15,31 @@ const CommentsList = ({ comments }) => {
           ) : (
             comments?.map((comment) => {
               return (
-                <>
-                  <div className="bg-blue-50 px-4 py-3 sm:px-6 flex justify-between items-center">
+                <div className="bg-white shadow-sm rounded-2xl border border-gray-100 mb-4 overflow-hidden transition hover:shadow-md">
+                  <div className="px-4 py-3 flex justify-between items-center bg-blue-50">
                     <div>
-                      <h4 className="text-sm font-medium text-blue-600">
+                      <h4 className="text-sm font-semibold text-blue-700">
                         {comment?.author?.username}
                       </h4>
-                      <p className="text-sm text-gray-500">
-                        {new Date(comment?.createdAt).toDateString}
+                      <p className="text-xs text-gray-500">
+                        {new Date(comment?.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
                       </p>
                     </div>
                   </div>
-                  <div className="bg-blue-50 px-4 py-3 sm:px-6">
-                    <p className="mt-1 text-sm text-gray-700">
+
+                  <div className="px-4 py-3">
+                    <p className="text-sm text-gray-700 leading-relaxed">
                       {comment?.message}
                     </p>
                   </div>
-                </>
+                </div>
               );
             })
           )}
