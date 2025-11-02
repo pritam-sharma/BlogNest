@@ -33,9 +33,9 @@ const postSchema = new mongoose.Schema(
       },
     ],
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      // required: true,
+      type: String, // allows both predefined and custom
+      required: true,
+      trim: true,
     },
     scheduledPublished: {
       type: Date,

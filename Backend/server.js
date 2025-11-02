@@ -45,6 +45,42 @@ app.get("/", (req, res) => {
 //? Not found route handler
 app.use(notFound);
 
+app.get("/test", (req, res) => {
+  const options = {
+    method: "POST",
+    hostname: "www.screenshotmachine.com",
+    path: "/capture.php",
+    headers: {
+      Cookie: "PHPSESSID=uqpim8geif0n4ccg640kvlh0pu",
+    },
+    maxRedirects: 20,
+  };
+
+  const postData =
+    '------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name="url"\r\n\r\nhttps://www.hostinger.com/\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name="device"\r\n\r\ndesktop\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name="cacheLimit"\r\n\r\n0\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--';
+
+  const request = https.request(options, (response) => {
+    let chunks = [];
+    response.on("data", (chunk) => {
+      chunks.push(chunk);
+    });
+    response.on("end", () => {
+      const body = Buffer.concat(chunks);
+      res.status(200).send(body.toString());
+    });
+    response.on("error", (error) => {
+      res.status(500).send("Error: " + error.message);
+    });
+  });
+
+  request.setHeader(
+    "content-type",
+    "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+  );
+  request.write(postData);
+  request.end();
+});
+
 //? Setup global error handler
 app.use(globalErrorHandler);
 const PORT = process.env.PORT || 9080;
