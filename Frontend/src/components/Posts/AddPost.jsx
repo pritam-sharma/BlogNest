@@ -13,26 +13,24 @@ const AddPost = () => {
   const { error, loading, success } = useSelector((state) => state?.posts);
   const { categories } = useSelector((state) => state?.categories);
 
-  // const defaultCategories = [
-  //   { value: "frontend", label: "Frontend" },
-  //   { value: "backend", label: "Backend" },
-  //   { value: "database", label: "Database" },
-  //   { value: "ai-ml", label: "AI/ML" },
-  // ];
-
+  // Convert fetched categories to Select options
   const options = [
     ...(categories?.allCategories?.map((cat) => ({
       value: cat._id,
       label: cat.name,
     })) || []),
+    { value: "add-new", label: "➕ Add new category" },
   ];
 
   const [formData, setFormData] = useState({
     title: "",
     image: null,
     category: null,
+    customCategory: "",
     content: "",
   });
+
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
 
   // Fetch categories
   useEffect(() => {
@@ -45,7 +43,8 @@ const AddPost = () => {
     if (!data.title) errors.title = "Title is required";
     if (!data.image) errors.image = "Image is required";
     if (!data.content) errors.content = "Content is required";
-    if (!data.category) errors.category = "Category is required";
+    if (!data.category && !data.customCategory)
+      errors.category = "Category is required";
     return errors;
   };
 
@@ -56,7 +55,13 @@ const AddPost = () => {
   };
 
   const handleSelectChange = (selectedOption) => {
-    setFormData({ ...formData, category: selectedOption.value });
+    if (selectedOption.value === "add-new") {
+      setIsCustomCategory(true);
+      setFormData({ ...formData, category: null });
+    } else {
+      setIsCustomCategory(false);
+      setFormData({ ...formData, category: selectedOption.value });
+    }
   };
 
   const handleChange = (e) => {
@@ -67,7 +72,6 @@ const AddPost = () => {
     setFormData({ ...formData, image: e.target.files[0] });
   };
 
-  // ✅ FIXED — added dispatch(addPostsAction(formData))
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -77,9 +81,12 @@ const AddPost = () => {
     if (Object.keys(formErrors).length === 0) {
       const data = new FormData();
       data.append("title", formData.title);
-      data.append("category", formData.category); // must be a valid _id
+      data.append(
+        "category",
+        isCustomCategory ? formData.customCategory : formData.category
+      );
       data.append("content", formData.content);
-      data.append("file", formData.image); // change "file" → "image" if backend uses .single("image")
+      data.append("file", formData.image);
 
       dispatch(addPostsAction(data));
 
@@ -87,8 +94,10 @@ const AddPost = () => {
         title: "",
         image: null,
         category: "",
+        customCategory: "",
         content: "",
       });
+      setIsCustomCategory(false);
     }
   };
 
@@ -112,7 +121,7 @@ const AddPost = () => {
         <label className="block mb-4">
           <span className="text-gray-700 font-medium">Title</span>
           <input
-            className="py-3 px-3 leading-5 w-full text-coolGray-400 font-normal border border-coolGray-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-lg shadow-sm"
+            className="py-3 px-3 w-full border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500"
             type="text"
             placeholder="Enter the post title"
             name="title"
@@ -129,7 +138,7 @@ const AddPost = () => {
         <label className="block mb-4">
           <span className="text-gray-700 font-medium">Image</span>
           <input
-            className="py-3 px-3 leading-5 w-full text-coolGray-400 font-normal border border-coolGray-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 rounded-lg shadow-sm"
+            className="py-3 px-3 w-full border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500"
             type="file"
             name="image"
             onChange={handleFileChange}
@@ -146,9 +155,21 @@ const AddPost = () => {
           <Select
             options={options}
             onChange={handleSelectChange}
-            placeholder="Select a category"
+            placeholder="Select or add a category"
             onBlur={handleBlur}
           />
+
+          {isCustomCategory && (
+            <input
+              type="text"
+              name="customCategory"
+              value={formData.customCategory}
+              onChange={handleChange}
+              placeholder="Enter a new category"
+              className="mt-3 py-2 px-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-green-500"
+              required
+            />
+          )}
 
           {errors?.category && (
             <p className="text-red-500 text-sm mt-1">{errors.category}</p>
@@ -172,7 +193,7 @@ const AddPost = () => {
           )}
         </label>
 
-        {/* Button */}
+        {/* Submit */}
         {loading ? (
           <LoadingComponent />
         ) : (

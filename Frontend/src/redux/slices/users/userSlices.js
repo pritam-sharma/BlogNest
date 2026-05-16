@@ -43,28 +43,89 @@ export const registerAction = createAsyncThunk(
   }
 );
 //!Login Action
+// export const loginAction = createAsyncThunk(
+//   "user/login",
+//   async (payload, { rejectWithValue, getState, dispatch }) => {
+//     //make request
+//     try {
+//       const { data } = await axios.post(
+//         `${API_BASE_URL}/api/v1/users/login`,
+//         payload
+//       );
+//       localStorage.setItem("userInfo", JSON.stringify(data));
+//       return data;
+//     } catch (err) {
+//       return rejectWithValue(err.response?.data);
+//     }
+//   }
+// );
 export const loginAction = createAsyncThunk(
   "user/login",
-  async (payload, { rejectWithValue, getState, dispatch }) => {
-    //make request
+  async (payload, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(
         `${API_BASE_URL}/api/v1/users/login`,
-        payload
+        payload,
+        { withCredentials: true } // important for refresh cookie
       );
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      // Store user info & access token in localStorage
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify({
+          _id: data._id,
+          username: data.username,
+          email: data.email,
+          role: data.role,
+        })
+      );
+      localStorage.setItem("accessToken", data.token);
+
       return data;
     } catch (err) {
-      return rejectWithValue(err.response?.data);
+      return rejectWithValue(err.response?.data || "Login failed");
     }
   }
 );
+// //!Logout Action
+// export const logoutAction = createAsyncThunk("user/logout", async () => {
+//   localStorage.removeItem("userInfo");
+//   return true;
+// });
+export const logoutAction = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await axios.post(
+        `${API_BASE_URL}/api/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
 
-//!Logout Action
-export const logoutAction = createAsyncThunk("user/logout", async () => {
-  localStorage.removeItem("userInfo");
-  return true;
-});
+      // Clear local storage
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("accessToken");
+
+      return true;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Logout failed");
+    }
+  }
+);
+export const refreshAccessToken = async () => {
+  try {
+    const { data } = await axios.post(
+      `${API_BASE_URL}/api/v1/users/refresh`,
+      {},
+      { withCredentials: true }
+    );
+    localStorage.setItem("accessToken", data.token);
+    return data.accessToken;
+  } catch (err) {
+    console.error("Refresh token failed:", err);
+    return null;
+  }
+};
+
 //!getPublicProfile Action
 export const userPublicProfileAction = createAsyncThunk(
   "user/user-public-profile",
@@ -137,6 +198,9 @@ const usersSlice = createSlice({
       state.loading = false;
       state.success = false;
       state.error = action.payload;
+    });
+    builder.addCase(logoutAction.fulfilled, (state) => {
+      state.userInfo = null;
     });
     //!resetError Action
     builder.addCase(resetErrorAction, (state) => {
