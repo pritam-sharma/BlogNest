@@ -2,6 +2,7 @@ const express = require("express");
 const {
   register,
   login,
+  logout,
   getProfile,
   blockUser,
   unblockUser,
@@ -15,13 +16,14 @@ const {
   getPublicProfile,
 } = require("../../controllers/Users/usersController");
 const isLoggedIn = require("../../middlewares/isLoggedIn");
-
+const { generateRefreshToken } = require("../../utils/generateToken");
 const usersRouter = express.Router();
 
 //!register and login routes
 usersRouter.post("/register", register);
 usersRouter.post("/login", login);
-
+usersRouter.post("/refresh", generateRefreshToken);
+usersRouter.post("/logout", logout);
 //!profile route
 usersRouter.get("/profile", isLoggedIn, getProfile);
 

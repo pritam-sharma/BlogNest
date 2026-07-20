@@ -1,7 +1,10 @@
-const User = require("../../models/Users/User");
+const User = require("../../models/Users/User.js");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
-const generateToken = require("../../utils/generateToken");
+const {
+  generateToken,
+  generateRefreshToken,
+} = require("../../utils/generateToken");
 const sendEmail = require("../../utils/sendEmails");
 const crypto = require("crypto");
 const sendVerificationEmail = require("../../utils/sendVarificationEmail");
@@ -30,26 +33,83 @@ exports.register = asyncHandler(async (req, res, next) => {
 //@desc Login new user
 //@route POST /api/v1/users/login
 //@access public
+// exports.login = asyncHandler(async (req, res, next) => {
+//   const { username, password } = req.body;
+//   const user = await User.findOne({ username });
+//   if (!user) {
+//     throw new Error("User Not Found");
+//   }
+//   const isMatch = await bcrypt.compare(password, user?.password);
+//   if (!isMatch) {
+//     throw new Error("Invalid Credentials");
+//   }
+//   user.lastlogin = new Date();
+//   await user.save();
+//   res.json({
+//     status: "success",
+//     email: user?.email,
+//     _id: user?._id,
+//     username: user?.username,
+//     role: user?.role,
+//     token: generateToken(user),
+//   });
+// });
+
 exports.login = asyncHandler(async (req, res, next) => {
   const { username, password } = req.body;
+
   const user = await User.findOne({ username });
   if (!user) {
-    throw new Error("User Not Found");
+    res.status(404);
+    throw new Error("User not found");
   }
-  const isMatch = await bcrypt.compare(password, user?.password);
+
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    throw new Error("Invalid Credentials");
+    res.status(401);
+    throw new Error("Invalid credentials");
   }
+
   user.lastlogin = new Date();
+
+  // ✅ Generate tokens
+  const accessToken = generateToken(user);
+  const refreshToken = generateRefreshToken(user);
+
+  // ✅ Save refresh token in DB
+  user.refreshToken = refreshToken;
   await user.save();
+
+  // ✅ Send refresh token as HTTP-only cookie
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+
+  // ✅ Send access token to client
   res.json({
     status: "success",
-    email: user?.email,
-    _id: user?._id,
-    username: user?.username,
-    role: user?.role,
-    token: generateToken(user),
+    email: user.email,
+    _id: user._id,
+    username: user.username,
+    role: user.role,
+    token: accessToken,
   });
+});
+
+exports.logout = asyncHandler(async (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (token) {
+    const user = await User.findOne({ refreshToken: token });
+    if (user) {
+      user.refreshhToken = null;
+      await user.save();
+    }
+  }
+  res.clearCookie("refreshToken");
+  res.json({ message: "Logged out successfully" });
 });
 
 //@desc Profile view
